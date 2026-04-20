@@ -10,15 +10,19 @@ async function getUser(id) {
 
 async function emailExists(email) {
   const user = await usersRepository.getUserByEmail(email);
-  return !!user; // Return true if user exists, false otherwise
-}
-
-async function createUser(email, password, fullName) {
-  return usersRepository.createUser(email, password, fullName);
+  return !!user;
 }
 
 async function updateUser(id, email, fullName) {
   return usersRepository.updateUser(id, email, fullName);
+}
+
+async function updateProfile(id, phoneNumber, profilePicture) {
+  return usersRepository.updateProfile(id, phoneNumber, profilePicture);
+}
+
+async function changePassword(id, password) {
+  return usersRepository.changePassword(id, password);
 }
 
 async function deleteUser(id) {
@@ -29,7 +33,8 @@ module.exports = {
   getUsers,
   getUser,
   emailExists,
-  createUser,
   updateUser,
+  updateProfile,
+  changePassword,
   deleteUser,
 };
