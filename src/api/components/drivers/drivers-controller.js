@@ -1,5 +1,6 @@
 const driversService = require('./drivers-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
+const { hashPassword, passwordMatched } = require('../../../utils/password');
 
 async function getDrivers(request, response, next) {
   try {
@@ -74,6 +75,67 @@ async function updateDriver(request, response, next) {
   }
 }
 
+async function changePassword(request, response, next) {
+  try {
+    const userId = request.user.id;
+    const {
+      old_password: oldPassword,
+      new_password: newPassword,
+      confirm_new_password: confirmNewPassword,
+    } = request.body;
+
+    const user = await driversService.getUser(userId);
+    if (!user) {
+      throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'User not found');
+    }
+
+    const isMatch = await passwordMatched(oldPassword, user.password);
+    if (!isMatch) {
+      throw errorResponder(errorTypes.UNAUTHORIZED, 'Incorrect old password');
+    }
+
+    if (newPassword.length < 8) {
+      throw errorResponder(
+        errorTypes.VALIDATION_ERROR,
+        'New password must be at least 8 characters long'
+      );
+    }
+
+    if (newPassword === oldPassword) {
+      throw errorResponder(
+        errorTypes.VALIDATION_ERROR,
+        'New password must be different from old password'
+      );
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      throw errorResponder(
+        errorTypes.VALIDATION_ERROR,
+        'New password and confirm password do not match'
+      );
+    }
+
+    const hashedNewPassword = await hashPassword(newPassword);
+    const success = await driversService.changePassword(
+      userId,
+      hashedNewPassword
+    );
+
+    if (!success) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        'Failed to change password'
+      );
+    }
+
+    return response
+      .status(200)
+      .json({ message: 'Password changed successfully' });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 async function updateStatus(request, response, next) {
   try {
     const { status } = request.body;
@@ -102,6 +164,7 @@ module.exports = {
   getDrivers,
   getDriver,
   updateDriver,
+  changePassword,
   updateStatus,
   deleteDriver,
 };
