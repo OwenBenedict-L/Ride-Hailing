@@ -7,6 +7,8 @@ const review = require('./components/review/review-route');
 const bookings = require('./components/bookings/bookings-route');
 const notifications = require('./components/notifications/notifications-route');
 const estimations = require('./components/estimations/estimations-route');
+const drivers = require('./components/drivers/drivers-route');
+const chats = require('./components/chats/chats-route');
 
 module.exports = () => {
   const app = express.Router();
@@ -17,6 +19,8 @@ module.exports = () => {
   bookings(app);
   notifications(app);
   estimations(app);
+  drivers(app);
+  chats(app);
 
   return app;
 };
