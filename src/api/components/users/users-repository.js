@@ -20,6 +20,13 @@ async function updateUser(id, email, fullName) {
   return Users.updateOne({ _id: id }, { $set: { email, fullName } });
 }
 
+async function updateProfile(id, phoneNumber, profilePicture) {
+  return Users.updateOne(
+    { _id: id },
+    { $set: { phone_number: phoneNumber, profile_picture: profilePicture } }
+  );
+}
+
 async function changePassword(id, password) {
   return Users.updateOne({ _id: id }, { $set: { password } });
 }
@@ -34,6 +41,7 @@ module.exports = {
   getUserByEmail,
   createUser,
   updateUser,
+  updateProfile,
   changePassword,
   deleteUser,
 };

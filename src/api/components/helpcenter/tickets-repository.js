@@ -1,4 +1,3 @@
-// Pastikan path ini mengarah ke file index.js di folder models kamu
 const db = require('../../../models');
 const Ticket = db.Tickets; 
 

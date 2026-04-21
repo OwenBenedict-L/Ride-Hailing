@@ -1,34 +1,45 @@
 const jwt = require('jsonwebtoken');
 const authRepository = require('./auth-repository');
-const { passwordMatched } = require('../../../utils/password');
 
-async function generateTokenDriver(email){
-    const secretKey = 'RANDOM_STRING';
-    const payLoad = {
-        email,
-        timestamp: Date.now(),
-    }
+const usersRepository = require('../users/users-repository');
+const { passwordMatched, hashPassword } = require('../../../utils/password');
 
-    return jwt.sign(payLoad, secretKey, { expiresIn: '1d', });
+async function register(email, password, fullName) {
+  const existingUser = await usersRepository.getUserByEmail(email);
+  if (existingUser) {
+    throw new Error('Email already exists');
+  }
+  const hashedPassword = await hashPassword(password);
+  return usersRepository.createUser(email, hashedPassword, fullName);
 }
 
-async function checkLoginDriver(email, password) {
-    const driver = await authRepository.getDriverByEmail(email);
+function generateToken(email) {
+  const secretKey = 'RANDOM_STRING';
+  const payload = {
+    email,
+    timestamp: Date.now(),
+  };
+  return jwt.sign(payload, secretKey, {
+    expiresIn: '1d',
+  });
+}
 
-    const driverPass = driver ? driver.password : '<RANDOM>';
-    const loginPassed = await passwordMatched(password, driverPass);
+async function checkLogin(email, password) {
+  const user = await authRepository.getUserbyEmail(email);
 
-    if (driver && loginPassed){
-        return {
-            email: driver.email,
-            token: generateToken(email)
-        }
-    }
+  const userPass = user ? user.password : '<RANDOM>';
+  const loginPassed = await passwordMatched(password, userPass);
 
-    return null;
+  if (user && loginPassed) {
+    return {
+      email: user.email,
+      token: generateToken(email),
+    };
+  }
+  return null;
 }
 
 module.exports = {
-    generateTokenDriver,
-    checkLoginDriver 
+  checkLogin,
+  register,
 };

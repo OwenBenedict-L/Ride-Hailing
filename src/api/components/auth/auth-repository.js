@@ -1,7 +1,7 @@
-const { Drivers } = require('../../../models');
+const { Users } = require('../../../models');
 
-async function getDriverByEmail(email) {
-    return Drivers.findOne({ email });
+async function getUserbyEmail(email) {
+  return Users.findOne({ email });
 }
 
-module.exports = { getDriverByEmail };
+module.exports = { getUserbyEmail };
