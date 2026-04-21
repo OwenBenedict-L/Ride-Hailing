@@ -7,7 +7,7 @@ module.exports = (db) =>
         origin: { type: String, required: true },
         destination: { type: String, required: true },
         distance: Number,
-        price: Number,
+        fare: Number,
         estimatedTime: { type: Number },
         surgeMultiplier: { type: Number, default: 1.0 },
         status: {

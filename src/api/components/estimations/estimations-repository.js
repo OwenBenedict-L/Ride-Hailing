@@ -6,7 +6,7 @@ async function createEstimation(userId, data) {
     origin: data.origin,
     destination: data.destination,
     distance: data.distance,
-    price: data.price,
+    fare: data.fare,
     estimatedTime: data.estimatedTime,
     surgeMultiplier: data.surgeMultiplier,
     status: 'ACTIVE',
