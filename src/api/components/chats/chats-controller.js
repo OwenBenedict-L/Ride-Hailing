@@ -1,4 +1,4 @@
-const chatService = require('./chat-service');
+const chatService = require('./chats-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
 async function sendMessage(req, res, next) {
@@ -38,7 +38,10 @@ async function editMessage(req, res, next) {
     const { id, message } = req.body;
 
     if (!id || !message) {
-      throw errorResponder(errorTypes.VALIDATION_ERROR, 'ID and message required');
+      throw errorResponder(
+        errorTypes.VALIDATION_ERROR,
+        'ID and message required'
+      );
     }
 
     const result = await chatService.editMessage(id, message);

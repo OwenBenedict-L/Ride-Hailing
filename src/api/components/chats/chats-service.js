@@ -1,4 +1,4 @@
-const chatRepository = require('./chat-repository');
+const chatRepository = require('./chats-repository');
 
 async function sendMessage(data) {
   return chatRepository.sendMessage(data);
