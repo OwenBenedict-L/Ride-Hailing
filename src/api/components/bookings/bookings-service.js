@@ -18,9 +18,7 @@ async function getBooking(id) {
 async function createBooking(
   userId,
   pickupLocation,
-  destinationLocation,
-  fare,
-  distance
+  destinationLocation
 ) {
   const estimation = await estimationService.calculateEstimation(
     pickupLocation,
