@@ -20,10 +20,11 @@ async function createBooking(
   pickupLocation,
   destinationLocation
 ) {
-  const estimation = await estimationService.calculateEstimation(
-    pickupLocation,
-    destinationLocation
-  );
+  const estimation = await estimationService.createEstimation(userId, {
+    origin: pickupLocation,
+    destination: destinationLocation,
+    distance: 5 
+  });
   const activeBookings = await bookingRepository.getActives(userId);
   if (activeBookings.length > 0) {
     throw errorResponder(
@@ -36,7 +37,7 @@ async function createBooking(
     userId,
     pickupLocation,
     destinationLocation,
-    fare: estimation.fare,
+    fare: estimation.price,
     distance: estimation.distance,
     status: 'pending',
   });
@@ -71,7 +72,7 @@ async function updateBooking(id, status, driverId) {
     if (status === 'confirmed') {
       notifTitle = 'Driver Found!';
       notifMessage = 'Your driver is on the way to your pickup location.';
-    } else if (status === 'completed!') {
+    } else if (status === 'completed') {
       notifTitle = 'Order Completed';
       notifMessage = 'Your trip has been completed successfully. Thank you!';
     }
