@@ -9,6 +9,7 @@ const notifications = require('./components/notifications/notifications-route');
 const estimations = require('./components/estimations/estimations-route');
 const drivers = require('./components/drivers/drivers-route');
 const chats = require('./components/chats/chats-route');
+const helpcenter = require('./components/helpcenter/tickets-route');
 
 module.exports = () => {
   const app = express.Router();
@@ -21,6 +22,7 @@ module.exports = () => {
   estimations(app);
   drivers(app);
   chats(app);
+  helpcenter(app);
 
   return app;
 };

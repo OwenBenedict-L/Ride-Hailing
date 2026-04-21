@@ -10,7 +10,7 @@ async function getUser(id) {
 
 async function emailExists(email) {
   const user = await usersRepository.getUserByEmail(email);
-  return !!user; // Return true if user exists, false otherwise
+  return !!user; 
 }
 
 async function createUser(email, password, fullName) {
