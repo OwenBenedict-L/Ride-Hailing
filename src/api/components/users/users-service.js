@@ -1,4 +1,5 @@
 const usersRepository = require('./users-repository');
+const walletService = require('../wallet/wallet-service');
 
 async function getUsers() {
   return usersRepository.getUsers();
@@ -11,6 +12,16 @@ async function getUser(id) {
 async function emailExists(email) {
   const user = await usersRepository.getUserByEmail(email);
   return !!user;
+}
+
+async function createUser(email, password, fullName) {
+  const newUser = await usersRepository.createUser(email, password, fullName);
+
+  if (newUser) {
+    await walletService.createWallet(newUser._id.toString());
+  }
+
+  return newUser;
 }
 
 async function updateUser(id, email, fullName) {
@@ -33,6 +44,7 @@ module.exports = {
   getUsers,
   getUser,
   emailExists,
+  createUser,
   updateUser,
   updateProfile,
   changePassword,
