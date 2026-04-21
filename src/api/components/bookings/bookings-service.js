@@ -16,11 +16,7 @@ async function getBooking(id) {
   return bookingRepository.getBooking(id);
 }
 
-async function createBooking(
-  userId,
-  pickupLocation,
-  destinationLocation
-) {
+async function createBooking(userId, pickupLocation, destinationLocation) {
   const estimation = await estimationService.calculateEstimation(
     pickupLocation,
     destinationLocation

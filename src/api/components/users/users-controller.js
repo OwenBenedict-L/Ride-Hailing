@@ -14,7 +14,6 @@ async function getUsers(request, response, next) {
   try {
     const users = await usersService.getUsers();
 
-    // Format setiap user di dalam array
     const formattedUsers = users.map(formatUserResponse);
 
     return response.status(200).json(formattedUsers);
@@ -122,7 +121,6 @@ async function updateProfile(request, response, next) {
 }
 
 async function changePassword(request, response, next) {
-<<<<<<< HEAD
   try {
     const userId = request.user.id;
     const {
@@ -181,9 +179,6 @@ async function changePassword(request, response, next) {
   } catch (error) {
     return next(error);
   }
-=======
-  return next(errorResponder(errorTypes.NOT_IMPLEMENTED));
->>>>>>> d19c15ede408254d66d580f64098b18e586646e9
 }
 
 async function deleteUser(request, response, next) {
