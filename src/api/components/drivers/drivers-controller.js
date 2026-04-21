@@ -19,11 +19,11 @@ async function getDriver(request, response, next) {
     if (!driver) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
-        'Error, akun tidak terdaftar'
+        'Error! Account is not registered!'
       );
     }
 
-    return response.status(200).json(user);
+    return response.status(200).json(driver);
   } catch (error) {
     return next(error);
   }
