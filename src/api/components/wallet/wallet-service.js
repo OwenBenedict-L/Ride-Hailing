@@ -1,5 +1,9 @@
 const walletRepository = require('./wallet-repository');
 
+async function createWallet(userId) {
+  return walletRepository.createWallet(userId);
+}
+
 async function getBalance(userId) {
   const walletData = await walletRepository.getBalance(userId);
 
@@ -69,6 +73,7 @@ async function payForRide(userId, amount) {
 }
 
 module.exports = {
+  createWallet,
   getBalance,
   topUpBalance,
   payForRide,
