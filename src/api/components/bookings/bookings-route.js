@@ -5,7 +5,7 @@ const bookingsController = require('./bookings-controller');
 const route = express.Router();
 
 module.exports = (app) => {
-  app.use('/api/bookings', route);
+  app.use('/bookings', route);
 
   // Mengambil riwayat daftar pesanan
   route.get('/history', bookingsController.getHistory);

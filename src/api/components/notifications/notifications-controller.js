@@ -6,17 +6,12 @@ async function getNotifications(request, response, next) {
     const { userId } = request.query;
 
     if (!userId) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR, 
-        'User ID is required!'
-        );
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'User ID is required!');
     }
 
     const notifications = await notificationsService.getNotifications(userId);
 
-    return response
-        .status(200)
-        .json(notifications);
+    return response.status(200).json(notifications);
   } catch (error) {
     return next(error);
   }
@@ -47,7 +42,9 @@ async function createNotification(request, response, next) {
       );
     }
 
-    return response.status(201).json({ message: 'Notification sent successfully!' });
+    return response
+      .status(201)
+      .json({ message: 'Notification sent successfully!' });
   } catch (error) {
     return next(error);
   }
@@ -58,10 +55,7 @@ async function clearNotifications(request, response, next) {
     const { userId } = request.body;
 
     if (!userId) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR, 
-        'User ID is required!'
-        );
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'User ID is required!');
     }
 
     const success = await notificationsService.clearNotifications(userId);
@@ -74,8 +68,8 @@ async function clearNotifications(request, response, next) {
     }
 
     return response
-        .status(200)
-        .json({ message: 'Notifications cleared successfully!' });
+      .status(200)
+      .json({ message: 'Notifications cleared successfully!' });
   } catch (error) {
     return next(error);
   }
