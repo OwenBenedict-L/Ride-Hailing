@@ -3,7 +3,7 @@ module.exports = (db) =>
     'Tickets',
     db.Schema(
       {
-        transactionId: { 
+        transactionId: {
           type: String,
           required: true,
         },
