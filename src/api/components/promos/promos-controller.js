@@ -49,7 +49,6 @@ async function validatePromo(request, response, next) {
       );
     }
 
-    // Hitung diskon
     let discountAmount = (promo.discount_percentage / 100) * ride_cost;
     if (promo.max_discount && discountAmount > promo.max_discount) {
       discountAmount = promo.max_discount;
