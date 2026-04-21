@@ -1,12 +1,15 @@
 const estimationsRepository = require('./estimations-repository');
 
 async function createEstimation(userId, data) {
-  const distance = data.distance || 1; //dalam kilometer
+  const min = 2;
+  const max = 15;
+  const distance = Math.floor(Math.random() * (max - min + 1)) + min; // dalam km
   const fare = distance * 5000;
   const estimatedTime = Math.ceil(distance * 4); //dalam menit
 
   return estimationsRepository.createEstimation(userId, {
     ...data,
+    distance,
     fare,
     estimatedTime,
     surgeMultiplier: 1.0,
