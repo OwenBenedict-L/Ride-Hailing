@@ -13,7 +13,7 @@ async function getDriverByEmail(email) {
 }
 
 async function createDriver(email, password, fullNameDrivers) {
-  return Users.create({ email, password, fullNameDrivers });
+  return Drivers.create({ email, password, fullNameDrivers });
 }
 
 async function updateDriver(id, email, fullNameDrivers) {

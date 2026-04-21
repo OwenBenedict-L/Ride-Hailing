@@ -1,6 +1,7 @@
 const bookingRepository = require('./bookings-repository');
 const notificationsService = require('../notifications/notifications-service');
 const estimationService = require('../estimations/estimations-service.js');
+const driversRepository = require('../drivers/drivers-repository');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
 async function getHistory(userId) {
@@ -74,6 +75,12 @@ async function updateBooking(id, status, driverId) {
     } else if (status === 'completed!') {
       notifTitle = 'Order Completed';
       notifMessage = 'Your trip has been completed successfully. Thank you!';
+    }
+    if (currentBooking.driverId) {
+      await driversRepository.updateStatus(
+        currentBooking.driverId,
+        'available'
+      );
     }
 
     if (notifTitle) {
