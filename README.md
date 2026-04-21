@@ -16,3 +16,65 @@
 2. Create a new folder in `./src/api/components` (if needed). Remember to separate your codes to repositories, services, controllers, and routes.
 3. Add the new route in `./src/api/routes.js`.
 4. Test your new endpoints in the API client app.
+
+## 1. Membuat Tiket
+
+POST localhost:5001/api/helpcenter/tickets
+{
+"transactionId":"rideId", -> dari sheireen
+"userId": "user111",
+"subject": "Barang Tertinggal",
+"description": "Dompet saya tertinggal di kereta"
+}
+
+## 2. Mengecek Tiket
+
+Get localhost:5001/api/helpcenter/tickets?userId= ... -> masukkan userId
+
+## 3. Melihat Detail Tiket
+
+GET localhost:5001/api/helpcenter/tickets/rideId -> dari sheireen
+
+## 4. Menambah Balasan ke Tiket Aktif
+
+POST localhost:5001/api/helpcenter/tickets/ride_id/replies -> dari sheireen
+
+{
+"sender": "user",
+"message": "Ini kapan kelar ya HAlooo....?"
+}
+
+### jika ada pov developer bisa juga gunain ini :v
+
+{
+"sender": "cs",
+"message": "Halo, ini bla bla...."
+}
+
+## 5. Menutup/Menyelesaikan Tiket
+
+PUT localhost:5001/api/helpcenter/tickets/ride_id/resolve -> dari sheireen
+
+note: butuh rideId dari sheiren
+
+Delete & Get
+localhost:5001/api/estimations/"DataBase_Id"
+localhost:5001/api/estimations/69e3c37ac4f08e6ddbaa9e67
+
+Post
+localhost:5001/api/estimations
+{
+  "userId": "nama",
+  "origin": "lokasi penjemputan",
+  "destination": "lokasi tujuan",
+  "distance": angka
+}
+
+Put
+localhost:5001/api/estimations/url/route
+{
+  "userId": "nama",
+  "origin": "lokasi penjemputan",
+  "destination": "lokasi tujuan",
+  "distance": angka
+}

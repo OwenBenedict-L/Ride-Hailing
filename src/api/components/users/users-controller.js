@@ -122,6 +122,7 @@ async function updateProfile(request, response, next) {
 }
 
 async function changePassword(request, response, next) {
+<<<<<<< HEAD
   try {
     const userId = request.user.id;
     const {
@@ -180,6 +181,9 @@ async function changePassword(request, response, next) {
   } catch (error) {
     return next(error);
   }
+=======
+  return next(errorResponder(errorTypes.NOT_IMPLEMENTED));
+>>>>>>> d19c15ede408254d66d580f64098b18e586646e9
 }
 
 async function deleteUser(request, response, next) {

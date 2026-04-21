@@ -11,6 +11,12 @@ async function getUser(id) {
 async function emailExists(email) {
   const user = await usersRepository.getUserByEmail(email);
   return !!user;
+
+  return !!user;
+}
+
+async function createUser(email, password, fullName) {
+  return usersRepository.createUser(email, password, fullName);
 }
 
 async function updateUser(id, email, fullName) {
