@@ -5,6 +5,8 @@ const users = require('./components/users/users-route');
 const estimations = require('./components/estimations/estimations-route');
 const wallet = require('./components/wallet/wallet-route');
 const review = require('./components/review/review-route');
+const bookings = require('./components/bookings/bookings-route');
+const notifications = require('./components/notifications/notifications-route');
 
 module.exports = () => {
   const app = express.Router();
@@ -13,6 +15,8 @@ module.exports = () => {
   users(app);
   wallet(app);
   review(app);
+  bookings(app);
+  notifications(app);
 
   return app;
 };
