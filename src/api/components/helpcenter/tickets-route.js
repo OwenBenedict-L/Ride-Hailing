@@ -3,7 +3,7 @@ const ticketsController = require('./tickets-controller');
 const router = express.Router();
 
 module.exports = (app) => {
-  app.use('/helpcenter', router);
+  app.use('/helpcenter/tickets', router);
   router.get('/', ticketsController.getTickets);
   router.get('/:id', ticketsController.getTicketById);
   router.post('/', ticketsController.createTicket);

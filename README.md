@@ -64,17 +64,17 @@ localhost:5001/api/estimations/69e3c37ac4f08e6ddbaa9e67
 Post
 localhost:5001/api/estimations
 {
-  "userId": "nama",
-  "origin": "lokasi penjemputan",
-  "destination": "lokasi tujuan",
-  "distance": angka
+"userId": "nama",
+"origin": "lokasi penjemputan",
+"destination": "lokasi tujuan",
+"distance": angka
 }
 
 Put
 localhost:5001/api/estimations/url/route
 {
-  "userId": "nama",
-  "origin": "lokasi penjemputan",
-  "destination": "lokasi tujuan",
-  "distance": angka
+"userId": "nama",
+"origin": "lokasi penjemputan",
+"destination": "lokasi tujuan",
+"distance": angka
 }

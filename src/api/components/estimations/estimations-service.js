@@ -2,14 +2,14 @@ const estimationsRepository = require('./estimations-repository');
 
 async function createEstimation(userId, data) {
   const distance = data.distance || 1; //dalam kilometer
-  const price = distance * 5000; 
+  const fare = distance * 5000;
   const estimatedTime = Math.ceil(distance * 4); //dalam menit
 
   return estimationsRepository.createEstimation(userId, {
     ...data,
-    price,
+    fare,
     estimatedTime,
-    surgeMultiplier: 1.0
+    surgeMultiplier: 1.0,
   });
 }
 
@@ -18,10 +18,10 @@ async function getEstimationById(id) {
 }
 
 async function updateEstimationRoute(id, data) {
-  const updatedPrice = 25000; 
+  const updatedfare = 25000;
   return estimationsRepository.updateRoute(id, {
     ...data,
-    price: updatedPrice
+    fare: updatedfare,
   });
 }
 

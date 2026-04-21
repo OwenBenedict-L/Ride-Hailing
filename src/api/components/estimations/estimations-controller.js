@@ -2,10 +2,10 @@ const estimationsService = require('./estimations-service');
 
 async function createEstimation(request, response, next) {
   try {
-
     const userId = request.body.userId || 'guest_user';
 
-    const existingEstimation = await estimationsService.getEstimationByUserId(userId);
+    const existingEstimation =
+      await estimationsService.getEstimationByUserId(userId);
 
     if (existingEstimation) {
       return response.status(400).json({
@@ -15,7 +15,10 @@ async function createEstimation(request, response, next) {
       });
     }
 
-    const result = await estimationsService.createEstimation(userId, request.body);
+    const result = await estimationsService.createEstimation(
+      userId,
+      request.body
+    );
     return response.status(201).json(result);
   } catch (error) {
     next(error);
@@ -26,11 +29,11 @@ async function getEstimationById(request, response, next) {
   try {
     const { id } = request.params;
     const result = await estimationsService.getEstimationById(id);
-    
+
     if (!result) {
       return response.status(404).json({ message: 'Estimation not found' });
     }
-    
+
     return response.status(200).json(result);
   } catch (error) {
     next(error);
@@ -40,8 +43,11 @@ async function getEstimationById(request, response, next) {
 async function updateEstimationRoute(request, response, next) {
   try {
     const { id } = request.params;
-    const result = await estimationsService.updateEstimationRoute(id, request.body);
-    
+    const result = await estimationsService.updateEstimationRoute(
+      id,
+      request.body
+    );
+
     if (!result) {
       return response.status(404).json({ message: 'Estimation not found' });
     }
@@ -66,12 +72,14 @@ async function deleteEstimation(request, response, next) {
   try {
     const { id } = request.params;
     const result = await estimationsService.deleteEstimation(id);
-    
+
     if (!result) {
       return response.status(404).json({ message: 'Estimation not found' });
     }
 
-    return response.status(200).json({ message: 'Estimation deleted successfully' });
+    return response
+      .status(200)
+      .json({ message: 'Estimation deleted successfully' });
   } catch (error) {
     next(error);
   }
