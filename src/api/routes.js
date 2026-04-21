@@ -1,5 +1,7 @@
 const express = require('express');
 
+const auth = require('./components/auth/auth-route');
+const promos = require('./components/promos/promos-route');
 const books = require('./components/books/books-route');
 const users = require('./components/users/users-route');
 const wallet = require('./components/wallet/wallet-route');
@@ -13,7 +15,10 @@ const helpcenter = require('./components/helpcenter/tickets-route');
 
 module.exports = () => {
   const app = express.Router();
+
+  auth(app);
   books(app);
+  promos(app);
   users(app);
   wallet(app);
   review(app);
