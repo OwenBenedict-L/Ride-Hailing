@@ -10,15 +10,13 @@ async function register(request, response, next) {
       confirm_password: confirmPassword,
     } = request.body;
 
-    // 1. Tambahkan pengecekan password dan confirmPassword di awal
-    if (!email || !fullName || !password || !confirmPassword) {
+    if (!email || !fullName) {
       throw errorResponder(
         errorTypes.VALIDATION_ERROR,
-        'Email, Full Name, Password, and Confirm Password are required'
+        'Email and Full Name are required'
       );
     }
 
-    // 2. Sekarang aman untuk mengecek .length karena password dipastikan ada (bukan undefined)
     if (password.length < 8) {
       throw errorResponder(
         errorTypes.VALIDATION_ERROR,
@@ -58,14 +56,6 @@ async function register(request, response, next) {
 async function login(request, response, next) {
   try {
     const { email, password } = request.body;
-
-    // Tambahkan validasi agar tidak melempar undefined ke authService
-    if (!email || !password) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Email and Password are required'
-      );
-    }
 
     const loginResult = await authService.checkLogin(email, password);
 
