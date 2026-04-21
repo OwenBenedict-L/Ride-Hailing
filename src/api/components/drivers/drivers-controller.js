@@ -1,6 +1,5 @@
-const { driversService } = require('./drivers-service');
+const driversService = require('./drivers-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
-const { hashPassword } = require('../../../utils/password');
 
 async function getDrivers(request, response, next) {
   try {
@@ -24,70 +23,6 @@ async function getDriver(request, response, next) {
     }
 
     return response.status(200).json(driver);
-  } catch (error) {
-    return next(error);
-  }
-}
-
-async function createDriver(request, response, next) {
-  try {
-    const {
-      email,
-      password,
-      full_name: fullNameDriver,
-      confirm_password: confirmPassword,
-    } = request.body;
-
-    if (!email) {
-      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Email needed!');
-    }
-
-    if (!fullNameDriver) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Full Name needed!'
-      );
-    }
-
-    if (await driversService.emailExists(email)) {
-      throw errorResponder(
-        errorTypes.EMAIL_ALREADY_TAKEN,
-        'Email has already been used!'
-      );
-    }
-
-    if (password.length < 8) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Password must have minimal 8 characters long!'
-      );
-    }
-
-    if (password !== confirmPassword) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Password and confirm password is not the same!'
-      );
-    }
-
-    const hashedPassword = await hashPassword(password);
-
-    const success = await driversService.createUser(
-      email,
-      hashedPassword,
-      fullNameDriver
-    );
-
-    if (!success) {
-      throw errorResponder(
-        errorTypes.UNPROCESSABLE_ENTITY,
-        'Unable to log'
-      );
-    }
-
-    return response
-      .status(201)
-      .json({ message: 'User successfully created, welcome Driver!!!' });
   } catch (error) {
     return next(error);
   }
@@ -166,7 +101,6 @@ async function deleteDriver(request, response, next) {
 module.exports = {
   getDrivers,
   getDriver,
-  createDriver,
   updateDriver,
   updateStatus,
   deleteDriver,

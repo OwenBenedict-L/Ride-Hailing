@@ -14,10 +14,6 @@ async function emailExists(email) {
   return !!driver;
 }
 
-async function createDriver(email, password, fullNameDriver) {
-  return driversRepository.createDriver(email, password, fullNameDriver);
-}
-
 async function updateDriver(id, email, fullNameDriver) {
   return driversRepository.updateDriver(id, email, fullNameDriver);
 }
@@ -61,7 +57,6 @@ module.exports = {
   getDrivers,
   getDriver,
   emailExists,
-  createDriver,
   updateDriver,
   acceptBooking,
   updateStatus,

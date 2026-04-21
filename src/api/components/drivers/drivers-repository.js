@@ -12,10 +12,6 @@ async function getDriverByEmail(email) {
   return Drivers.findOne({ email });
 }
 
-async function createDriver(email, password, fullNameDrivers) {
-  return Drivers.create({ email, password, fullNameDrivers });
-}
-
 async function updateDriver(id, email, fullNameDrivers) {
   return Drivers.updateOne({ _id: id }, { $set: { email, fullNameDrivers } });
 }
@@ -51,7 +47,6 @@ module.exports = {
   getDrivers,
   getDriver,
   getDriverByEmail,
-  createDriver,
   updateDriver,
   updateStatus,
   deleteDriver,

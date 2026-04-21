@@ -7,7 +7,6 @@ module.exports = (app) => {
 
   route.get('/profile', driversController.getDrivers);
   route.get('/:id', driversController.getDriver);
-  route.post('/register', driversController.createDriver);
   route.put('/update', driversController.updateDriver);
   route.put('/status', driversController.updateStatus);
   route.delete('/', driversController.deleteDriver);
