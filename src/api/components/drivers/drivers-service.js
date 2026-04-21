@@ -14,12 +14,12 @@ async function emailExists(email) {
   return !!driver;
 }
 
-async function createDriver(email, password, fullNameDriver) {
-  return driversRepository.createDriver(email, password, fullNameDriver);
-}
-
 async function updateDriver(id, email, fullNameDriver) {
   return driversRepository.updateDriver(id, email, fullNameDriver);
+}
+
+async function changePasswordDriver(id, password) {
+  return driversRepository.changePasswordDriver(id, password);
 }
 
 async function acceptBooking(driverId, bookingId) {
@@ -61,8 +61,8 @@ module.exports = {
   getDrivers,
   getDriver,
   emailExists,
-  createDriver,
   updateDriver,
+  changePasswordDriver,
   acceptBooking,
   updateStatus,
   deleteDriver,

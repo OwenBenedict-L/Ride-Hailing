@@ -1,6 +1,6 @@
-const { driversService } = require('./drivers-service');
+const driversService = require('./drivers-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
-const { hashPassword } = require('../../../utils/password');
+const { hashPassword, passwordMatched } = require('../../../utils/password');
 
 async function getDrivers(request, response, next) {
   try {
@@ -24,70 +24,6 @@ async function getDriver(request, response, next) {
     }
 
     return response.status(200).json(driver);
-  } catch (error) {
-    return next(error);
-  }
-}
-
-async function createDriver(request, response, next) {
-  try {
-    const {
-      email,
-      password,
-      full_name: fullNameDriver,
-      confirm_password: confirmPassword,
-    } = request.body;
-
-    if (!email) {
-      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Email needed!');
-    }
-
-    if (!fullNameDriver) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Full Name needed!'
-      );
-    }
-
-    if (await driversService.emailExists(email)) {
-      throw errorResponder(
-        errorTypes.EMAIL_ALREADY_TAKEN,
-        'Email has already been used!'
-      );
-    }
-
-    if (password.length < 8) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Password must have minimal 8 characters long!'
-      );
-    }
-
-    if (password !== confirmPassword) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Password and confirm password is not the same!'
-      );
-    }
-
-    const hashedPassword = await hashPassword(password);
-
-    const success = await driversService.createUser(
-      email,
-      hashedPassword,
-      fullNameDriver
-    );
-
-    if (!success) {
-      throw errorResponder(
-        errorTypes.UNPROCESSABLE_ENTITY,
-        'Unable to log'
-      );
-    }
-
-    return response
-      .status(201)
-      .json({ message: 'User successfully created, welcome Driver!!!' });
   } catch (error) {
     return next(error);
   }
@@ -139,11 +75,72 @@ async function updateDriver(request, response, next) {
   }
 }
 
+async function changePasswordDriver(request, response, next) {
+  try {
+    const driverId = request.driver.id;
+    const {
+      old_password: oldPassword,
+      new_password: newPassword,
+      confirm_new_password: confirmNewPassword,
+    } = request.body;
+
+    const driver = await driversService.getDriver(driverId);
+    if (!driver) {
+      throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'User not found');
+    }
+
+    const isMatch = await passwordMatched(oldPassword, driver.password);
+    if (!isMatch) {
+      throw errorResponder(errorTypes.UNAUTHORIZED, 'Incorrect old password');
+    }
+
+    if (newPassword.length < 8) {
+      throw errorResponder(
+        errorTypes.VALIDATION_ERROR,
+        'New password must be at least 8 characters long'
+      );
+    }
+
+    if (newPassword === oldPassword) {
+      throw errorResponder(
+        errorTypes.VALIDATION_ERROR,
+        'New password must be different from old password'
+      );
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      throw errorResponder(
+        errorTypes.VALIDATION_ERROR,
+        'New password and confirm password do not match'
+      );
+    }
+
+    const hashedNewPassword = await hashPassword(newPassword);
+    const success = await driversService.changePassword(
+      driverId,
+      hashedNewPassword
+    );
+
+    if (!success) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        'Failed to change password'
+      );
+    }
+
+    return response
+      .status(200)
+      .json({ message: 'Password changed successfully' });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 async function updateStatus(request, response, next) {
   try {
     const { status } = request.body;
     await driversService.updateStatus(request.params.id, status);
-    return response.status(200).json({ message: 'Status driver: ', status });
+    return response.status(200).json({ message: 'Status driver has been updated', status });
   } catch (error) {
     return next(error);
   }
@@ -166,8 +163,8 @@ async function deleteDriver(request, response, next) {
 module.exports = {
   getDrivers,
   getDriver,
-  createDriver,
   updateDriver,
+  changePasswordDriver,
   updateStatus,
   deleteDriver,
 };
