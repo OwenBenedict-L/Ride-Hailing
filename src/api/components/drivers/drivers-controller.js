@@ -75,21 +75,21 @@ async function updateDriver(request, response, next) {
   }
 }
 
-async function changePassword(request, response, next) {
+async function changePasswordDriver(request, response, next) {
   try {
-    const userId = request.user.id;
+    const driverId = request.driver.id;
     const {
       old_password: oldPassword,
       new_password: newPassword,
       confirm_new_password: confirmNewPassword,
     } = request.body;
 
-    const user = await driversService.getUser(userId);
-    if (!user) {
+    const driver = await driversService.getDriver(driverId);
+    if (!driver) {
       throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'User not found');
     }
 
-    const isMatch = await passwordMatched(oldPassword, user.password);
+    const isMatch = await passwordMatched(oldPassword, driver.password);
     if (!isMatch) {
       throw errorResponder(errorTypes.UNAUTHORIZED, 'Incorrect old password');
     }
@@ -117,7 +117,7 @@ async function changePassword(request, response, next) {
 
     const hashedNewPassword = await hashPassword(newPassword);
     const success = await driversService.changePassword(
-      userId,
+      driverId,
       hashedNewPassword
     );
 
@@ -140,7 +140,7 @@ async function updateStatus(request, response, next) {
   try {
     const { status } = request.body;
     await driversService.updateStatus(request.params.id, status);
-    return response.status(200).json({ message: 'Status driver: ', status });
+    return response.status(200).json({ message: 'Status driver has been updated', status });
   } catch (error) {
     return next(error);
   }
@@ -164,7 +164,7 @@ module.exports = {
   getDrivers,
   getDriver,
   updateDriver,
-  changePassword,
+  changePasswordDriver,
   updateStatus,
   deleteDriver,
 };

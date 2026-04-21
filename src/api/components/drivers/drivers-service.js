@@ -18,6 +18,10 @@ async function updateDriver(id, email, fullNameDriver) {
   return driversRepository.updateDriver(id, email, fullNameDriver);
 }
 
+async function changePasswordDriver(id, password) {
+  return driversRepository.changePasswordDriver(id, password);
+}
+
 async function acceptBooking(driverId, bookingId) {
   const driver = await driversRepository.getDriver(driverId);
 
@@ -58,6 +62,7 @@ module.exports = {
   getDriver,
   emailExists,
   updateDriver,
+  changePasswordDriver,
   acceptBooking,
   updateStatus,
   deleteDriver,

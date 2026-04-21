@@ -29,6 +29,13 @@ async function updateDriver(id, email, fullNameDrivers) {
 //   );
 // }
 
+async function changeDriverPassword(id, password) {
+  return Drivers.updateOne(
+    { _id: id },
+    { $set: { password } }
+  );
+}
+
 async function updateStatus(id, status) {
   return Drivers.updateOne(
     { _id: id },
@@ -40,7 +47,9 @@ async function updateStatus(id, status) {
 }
 
 async function deleteDriver(id) {
-  return Drivers.deleteOne({ _id: id }, { $set: { deleted: true, status : "ONLINE" } });
+  return Drivers.updateOne({ _id: id }, { 
+    $set: { deleted: true, status : "OFFLINE" } }
+  );
 }
 
 module.exports = {
@@ -48,6 +57,7 @@ module.exports = {
   getDriver,
   getDriverByEmail,
   updateDriver,
+  changeDriverPassword,
   updateStatus,
   deleteDriver,
 };
