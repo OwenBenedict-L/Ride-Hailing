@@ -1,50 +1,80 @@
-const walletService = require('./wallet-service');
-const { errorResponder, errorTypes } = require('../../../core/errors');
+const walletRepository = require('./wallet-repository');
 
-async function getBalance(request, response, next) {
-  try {
-    const userId = request.params.id;
-    const balanceData = await walletService.getBalance(userId);
-
-    if (!balanceData) {
-      throw errorResponder(
-        errorTypes.UNPROCESSABLE_ENTITY,
-        'User wallet not found'
-      );
-    }
-
-    return response.status(200).json(balanceData);
-  } catch (error) {
-    return next(error);
-  }
+async function createWallet(userId) {
+  return walletRepository.createWallet(userId);
 }
 
-async function topUpBalance(request, response, next) {
-  try {
-    const { userId, amount } = request.body;
+async function getBalance(userId) {
+  const walletData = await walletRepository.getBalance(userId);
 
-    // User ID is required
-    if (!userId) {
-      throw errorResponder(errorTypes.VALIDATION_ERROR, 'User ID is required');
-    }
-
-    // Amount is required and must be greater than 0
-    if (!amount || amount <= 0) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Top-up amount must be greater than 0'
-      );
-    }
-
-    const topUpResult = await walletService.topUpBalance(userId, amount);
-
-    return response.status(200).json(topUpResult);
-  } catch (error) {
-    return next(error);
+  if (!walletData) {
+    throw new Error('User wallet not found');
   }
+
+  return walletData;
+}
+
+async function topUpBalance(userId, amount) {
+  const wallet = await walletRepository.getBalance(userId);
+
+  if (!wallet) {
+    throw new Error('User wallet not found');
+  }
+
+  const finalBalance = wallet.balance + amount;
+
+  const transactionData = {
+    userId,
+    transactionType: 'top-up',
+    amount,
+  };
+
+  await walletRepository.saveTransaction(transactionData);
+  const updatedWallet = await walletRepository.updateBalance(
+    userId,
+    finalBalance
+  );
+
+  return {
+    transaction: transactionData,
+    remainingBalance: updatedWallet.balance,
+  };
+}
+
+async function payForRide(userId, amount) {
+  const wallet = await walletRepository.getBalance(userId);
+
+  if (!wallet) {
+    throw new Error('User wallet not found');
+  }
+
+  if (wallet.balance < amount) {
+    throw new Error('Insufficient balance to make payment');
+  }
+
+  const finalBalance = wallet.balance - amount;
+
+  const transactionData = {
+    userId,
+    transactionType: 'ride_payment',
+    amount,
+  };
+
+  await walletRepository.saveTransaction(transactionData);
+  const updatedWallet = await walletRepository.updateBalance(
+    userId,
+    finalBalance
+  );
+
+  return {
+    transaction: transactionData,
+    remainingBalance: updatedWallet.balance,
+  };
 }
 
 module.exports = {
+  createWallet,
   getBalance,
   topUpBalance,
+  payForRide,
 };
