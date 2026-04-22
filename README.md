@@ -78,3 +78,24 @@ localhost:5001/api/estimations/url/route
 "destination": "lokasi tujuan",
 "distance": angka
 }
+
+let responseData = pm.response.json();
+pm.environment.set("harga_estimasi", responseData.fare);
+pm.environment.set("id_estimasi", responseData._id); 
+
+localhost:5001/api/promos/validate
+{
+  "estimationId": "{{id_estimasi}}",
+  "code": "UNTAR",
+  "fare": "{{harga_estimasi}}"
+}
+
+localhost:5001/api/promos
+{
+  "estimationId": "{{id_estimasi}}", //optional
+  "fare": "{{harga_estimasi}}",
+  "code": "UNTAR", 
+  "discount_percentage": 20,
+  "max_discount": 15000,
+  "expiry_date": "2026-12-31T23:59:59.000Z"
+}

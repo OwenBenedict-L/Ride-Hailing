@@ -9,10 +9,11 @@ async function getPromoByCode(code) {
   return promosRepository.getPromoByCode(formattedCode);
 }
 
-async function createPromo(code, discountPercentage, maxDiscount, expiryDate) {
+async function createPromo(fare, code, discountPercentage, maxDiscount, expiryDate) {
   const formattedCode = code.toUpperCase();
   
   return promosRepository.createPromo(
+    fare,
     formattedCode, 
     discountPercentage, 
     maxDiscount, 
