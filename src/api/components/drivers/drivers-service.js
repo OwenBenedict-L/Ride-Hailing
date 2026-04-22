@@ -16,12 +16,12 @@ async function emailExists(email) {
 }
 
 async function registerDriver(email, password, fullName) {
-  const existingUser = await driversRepository.getByEmail(email);
+  const existingUser = await driversRepository.getDriverByEmail(email);
   if (existingUser) {
     throw new Error('Email already exists');
   }
   const hashedPassword = await hashPassword(password);
-  return driversRepository.createUser(email, hashedPassword, fullName);
+  return driversRepository.createDriver(email, hashedPassword, fullName);
 }
 
 async function updateDriver(id, email, fullNameDriver) {

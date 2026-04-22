@@ -4,8 +4,8 @@ const usersRepository = require('../users/users-repository');
 const walletService = require('../wallet/wallet-service');
 const { passwordMatched, hashPassword } = require('../../../utils/password');
 
-async function registerUser(email, password, fullName) {
-  const existingUser = await usersRepository.getByEmail(email);
+async function register(email, password, fullName) {
+  const existingUser = await usersRepository.getUserByEmail(email);
   if (existingUser) {
     throw new Error('Email already exists');
   }
@@ -60,5 +60,5 @@ async function checkLogin(email, password) {
 
 module.exports = {
   checkLogin,
-  registerUser,
+  register,
 };
