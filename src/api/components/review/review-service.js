@@ -5,7 +5,7 @@ async function getReview(rideId) {
   const review = await reviewRepository.getReview(rideId);
 
   if (!review) {
-    throw new Error('Review has not been submitted for this ride');
+    throw new Error('Review has not been submitted for this ride!');
   }
 
   return review;
