@@ -11,7 +11,11 @@ async function register(email, password, fullName) {
   }
   const hashedPassword = await hashPassword(password);
 
-  const newUser = await usersRepository.createUser(email, hashedPassword, fullName);
+  const newUser = await usersRepository.createUser(
+    email,
+    hashedPassword,
+    fullName
+  );
 
   if (newUser) {
     await walletService.createWallet(newUser._id.toString());
@@ -20,10 +24,12 @@ async function register(email, password, fullName) {
   return newUser;
 }
 
-function generateToken(email) {
+function generateToken(id, email, role) {
   const secretKey = 'RANDOM_STRING';
   const payload = {
+    id,
     email,
+    role,
     timestamp: Date.now(),
   };
   return jwt.sign(payload, secretKey, {
@@ -32,15 +38,21 @@ function generateToken(email) {
 }
 
 async function checkLogin(email, password) {
-  const user = await authRepository.getUserbyEmail(email);
+  const result = await authRepository.getByEmail(email);
+  const pass = pass ? pass.password : '<RANDOM>';
+  const loginPassed = await passwordMatched(password, pass);
 
-  const userPass = user ? user.password : '<RANDOM>';
-  const loginPassed = await passwordMatched(password, userPass);
+  const { account, role } = result;
 
-  if (user && loginPassed) {
+  if (account && loginPassed) {
     return {
-      email: user.email,
-      token: generateToken(email),
+      email: account.email,
+      role,
+      token: generateToken({
+        id: account.id,
+        email: account.email,
+        role,
+      }),
     };
   }
   return null;

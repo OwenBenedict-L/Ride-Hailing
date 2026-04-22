@@ -3,16 +3,17 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
 
 async function sendMessage(req, res, next) {
   try {
-    const { ride_id, sender, message } = req.body;
+    const { ride_id, message } = req.body;
 
-    if (!ride_id || !sender || !message) {
+    if (!ride_id || !message) {
       throw errorResponder(errorTypes.VALIDATION_ERROR, 'All fields required');
     }
 
     const result = await chatService.sendMessage({
       ride_id,
-      sender,
       message,
+      sender_id: req.user.id,
+      sender_type: req.user.role,
     });
 
     return res.status(200).json(result);
