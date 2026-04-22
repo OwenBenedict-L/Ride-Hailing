@@ -11,8 +11,9 @@ async function getPromoByCode(code) {
   return Promos.findOne({ code });
 }
 
-async function createPromo(code, discountPercentage, maxDiscount, expiryDate) {
+async function createPromo(fare, code, discountPercentage, maxDiscount, expiryDate) {
   return Promos.create({
+    fare,
     code,
     discount_percentage: discountPercentage,
     max_discount: maxDiscount,
