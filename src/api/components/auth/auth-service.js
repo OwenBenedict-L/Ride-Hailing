@@ -44,7 +44,7 @@ async function checkLogin(email, password) {
 
   const { account, role } = result;
 
-  if (loginPassed) {
+  if (account && loginPassed) {
     return {
       email: account.email,
       role,
