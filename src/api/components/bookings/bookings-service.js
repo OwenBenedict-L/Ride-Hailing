@@ -34,6 +34,16 @@ async function createBooking(
     destination: destinationLocation,
   });
 
+  const userWallet = await walletService.getBalance(userId);
+  const currentBalance = userWallet ? userWallet.balance : 0;
+  
+  if (currentBalance < estimation.fare) {
+    throw errorResponder(
+      errorTypes.VALIDATION_ERROR,
+      `Insufficient wallet balance. Fare is Rp ${estimation.fare}, but your balance is only Rp ${currentBalance}. Please top-up.`
+    );
+  }
+
   const booking = await bookingRepository.createBooking({
     userId,
     pickupLocation,
