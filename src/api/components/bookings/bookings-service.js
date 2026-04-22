@@ -2,6 +2,7 @@ const bookingRepository = require('./bookings-repository');
 const notificationsService = require('../notifications/notifications-service');
 const estimationService = require('../estimations/estimations-service.js');
 const driversRepository = require('../drivers/drivers-repository');
+const walletService = require('../wallet/wallet-service'); 
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
 async function getHistory(userId) {
@@ -21,10 +22,6 @@ async function createBooking(
   pickupLocation,
   destinationLocation
 ) {
-  const estimation = await estimationService.createEstimation(userId, {
-    origin: pickupLocation,
-    destination: destinationLocation,
-  });
   const activeBookings = await bookingRepository.getActives(userId);
   if (activeBookings.length > 0) {
     throw errorResponder(
@@ -32,6 +29,10 @@ async function createBooking(
       'You still have an active booking, please complete or cancel it first.'
     );
   }
+    const estimation = await estimationService.createEstimation(userId, {
+    origin: pickupLocation,
+    destination: destinationLocation,
+  });
 
   const booking = await bookingRepository.createBooking({
     userId,
@@ -60,6 +61,17 @@ async function updateBooking(id, status, driverId) {
     throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Booking not found');
   }
 
+   if (status === 'completed' && currentBooking.status !== 'completed') {
+    try {
+      await walletService.payForRide(currentBooking.userId, currentBooking.fare);
+    } catch (error) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        `Payment failed: ${error.message}`
+      );
+    }
+  }
+
   const updated = await bookingRepository.updateBooking(id, {
     status,
     driverId,
@@ -72,15 +84,19 @@ async function updateBooking(id, status, driverId) {
     if (status === 'confirmed') {
       notifTitle = 'Driver Found!';
       notifMessage = 'Your driver is on the way to your pickup location.';
+
+      if (driverId) {
+        await driversRepository.updateStatus(driverId, 'busy');
+      }
+
     } else if (status === 'completed') {
       notifTitle = 'Order Completed';
       notifMessage = 'Your trip has been completed successfully. Thank you!';
-    }
-    if (currentBooking.driverId) {
-      await driversRepository.updateStatus(
-        currentBooking.driverId,
-        'available'
-      );
+
+      const finalDriverId = driverId || currentBooking.driverId;
+      if (finalDriverId) {
+        await driversRepository.updateStatus(finalDriverId, 'available');
+      }
     }
 
     if (notifTitle) {
