@@ -44,33 +44,7 @@ async function topUpBalance(request, response, next) {
   }
 }
 
-async function payForRide(request, response, next) {
-  try {
-    const { userId, amount } = request.body;
-
-    // User ID is required
-    if (!userId) {
-      throw errorResponder(errorTypes.VALIDATION_ERROR, 'User ID is required');
-    }
-
-    // Amount is required and must be greater than 0
-    if (!amount || amount <= 0) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Payment amount must be greater than 0'
-      );
-    }
-
-    const paymentResult = await walletService.payForRide(userId, amount);
-
-    return response.status(200).json(paymentResult);
-  } catch (error) {
-    return next(error);
-  }
-}
-
 module.exports = {
   getBalance,
   topUpBalance,
-  payForRide,
 };
