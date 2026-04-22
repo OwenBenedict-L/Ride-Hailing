@@ -8,6 +8,11 @@ async function getDriver(id) {
   return Drivers.findById(id);
 }
 
+async function createDriver(email, password, fullName) {
+  return Drivers.create({ email, password, fullName });
+}
+
+
 async function getDriverByEmail(email) {
   return Drivers.findOne({ email });
 }
@@ -55,6 +60,7 @@ async function deleteDriver(id) {
 module.exports = {
   getDrivers,
   getDriver,
+  createDriver,
   getDriverByEmail,
   updateDriver,
   changeDriverPassword,
