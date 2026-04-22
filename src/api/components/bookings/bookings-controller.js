@@ -23,7 +23,8 @@ async function getActives(request, response, next) {
 
 async function createBooking(request, response, next) {
   try {
-    const { userId, pickupLocation, destinationLocation } = request.body;
+    const { userId, pickupLocation, destinationLocation, promoCode } =
+      request.body;
 
     if (!userId || !pickupLocation || !destinationLocation) {
       throw errorResponder(
