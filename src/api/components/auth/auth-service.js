@@ -11,7 +11,11 @@ async function registerUser(email, password, fullName) {
   }
   const hashedPassword = await hashPassword(password);
 
-  const newUser = await usersRepository.createUser(email, hashedPassword, fullName);
+  const newUser = await usersRepository.createUser(
+    email,
+    hashedPassword,
+    fullName
+  );
 
   if (newUser) {
     await walletService.createWallet(newUser._id.toString());
@@ -35,24 +39,23 @@ function generateToken(id, email, role) {
 
 async function checkLogin(email, password) {
   const result = await authRepository.getByEmail(email);
-
-  if (!result) return null;
+  const pass = pass ? pass.password : '<RANDOM>';
+  const loginPassed = await passwordMatched(password, pass);
 
   const { account, role } = result;
 
-  const loginPassed = await passwordMatched(password, account.password);
-
-  if (!loginPassed) return null;
-
-  return {
-    email: account.email,
-    role,
-    token: generateToken({
-      id: account.id,
+  if (loginPassed) {
+    return {
       email: account.email,
       role,
-    }),
-  };
+      token: generateToken({
+        id: account.id,
+        email: account.email,
+        role,
+      }),
+    };
+  }
+  return null;
 }
 
 module.exports = {
