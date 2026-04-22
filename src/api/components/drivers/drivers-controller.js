@@ -29,6 +29,43 @@ async function getDriver(request, response, next) {
   }
 }
 
+async function registerDriver(req, res, next) {
+  try {
+    const {
+      email,
+      password,
+      full_name: fullName,
+    } = req.body;
+
+    if (!email || !password || !fullName) {
+      throw errorResponder(
+        errorTypes.VALIDATION_ERROR,
+        'All fields required'
+      );
+    }
+
+    if (password.length < 8) {
+      throw errorResponder(
+        errorTypes.VALIDATION_ERROR,
+        'Password must be at least 8 characters'
+      );
+    }
+
+    await driversService.registerDriver(email, password, fullName);
+
+    return res.status(201).json({
+      message: 'Driver registered successfully',
+    });
+  } catch (err) {
+    if (err.message === 'Email already exists') {
+      return next(
+        errorResponder(errorTypes.EMAIL_ALREADY_TAKEN, err.message)
+      );
+    }
+    return next(err);
+  }
+}
+
 async function updateDriver(request, response, next) {
   try {
     const { email, full_name: fullNameDriver } = request.body;
@@ -163,6 +200,7 @@ async function deleteDriver(request, response, next) {
 module.exports = {
   getDrivers,
   getDriver,
+  registerDriver,
   updateDriver,
   changePasswordDriver,
   updateStatus,

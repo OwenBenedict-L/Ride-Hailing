@@ -1,7 +1,20 @@
-const { Users } = require('../../../models');
+const { Users, Drivers } = require('../../../models');
 
-async function getUserbyEmail(email) {
-  return Users.findOne({ email });
+async function getByEmail(email) {
+  let account = await Users.findOne({ email });
+  let role = 'user';
+
+  if (!account) {
+    account = await Drivers.findOne({ email });
+    role = 'driver';
+  }
+
+  if (!account) return null;
+
+  return {
+    account,
+    role,
+  };
 }
 
-module.exports = { getUserbyEmail };
+module.exports = { getByEmail };
