@@ -12,7 +12,4 @@ module.exports = (app) => {
 
   // Top up wallet balance
   route.post('/top-up', walletController.topUpBalance);
-
-  // Pay for a ride
-  route.post('/payment', walletController.payForRide);
 };
