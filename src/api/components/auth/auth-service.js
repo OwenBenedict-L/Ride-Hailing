@@ -1,27 +1,27 @@
 const jwt = require('jsonwebtoken');
 const authRepository = require('./auth-repository');
-
 const usersRepository = require('../users/users-repository');
-const { passwordMatched, hashPassword } = require('../../../utils/password');
 const walletService = require('../wallet/wallet-service');
+const { passwordMatched, hashPassword } = require('../../../utils/password');
 
 async function register(email, password, fullName) {
   const existingUser = await usersRepository.getUserByEmail(email);
   if (existingUser) {
     throw new Error('Email already exists');
   }
-
   const hashedPassword = await hashPassword(password);
-  
-  const newUser = await usersRepository.createUser(email, hashedPassword, fullName);
+
+  const newUser = await usersRepository.createUser(
+    email,
+    hashedPassword,
+    fullName
+  );
 
   if (newUser) {
     await walletService.createWallet(newUser._id.toString());
   }
 
   return newUser;
-  
-  return usersRepository.createUser(email, hashedPassword, fullName);
 }
 
 function generateToken(email) {
