@@ -24,7 +24,6 @@ async function createBooking(
   const estimation = await estimationService.createEstimation(userId, {
     origin: pickupLocation,
     destination: destinationLocation,
-    distance: 5 
   });
   const activeBookings = await bookingRepository.getActives(userId);
   if (activeBookings.length > 0) {
@@ -38,7 +37,7 @@ async function createBooking(
     userId,
     pickupLocation,
     destinationLocation,
-    fare: estimation.price,
+    fare: estimation.fare,
     distance: estimation.distance,
     status: 'pending',
   });
