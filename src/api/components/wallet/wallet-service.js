@@ -1,4 +1,5 @@
 const walletRepository = require('./wallet-repository');
+const notificationsService = require('../notifications/notifications-service');
 
 async function createWallet(userId) {
   return walletRepository.createWallet(userId);
@@ -35,6 +36,15 @@ async function topUpBalance(userId, amount) {
     finalBalance
   );
 
+  if (updatedWallet) {
+    await notificationsService.createNotification(
+      userId,
+      'Top-up Success!',
+      `Rp${amount.toLocaleString()} has been added to your wallet!`,
+      'payment'
+    );
+  }
+
   return {
     transaction: transactionData,
     remainingBalance: updatedWallet.balance,
@@ -65,6 +75,15 @@ async function payForRide(userId, amount) {
     userId,
     finalBalance
   );
+
+  if (updatedWallet) {
+    await notificationsService.createNotification(
+      userId,
+      'Payment Successful!',
+      `Payment of Rp${amount.toLocaleString()} for your ride was successful.`,
+      'payment'
+    );
+  }
 
   return {
     transaction: transactionData,
