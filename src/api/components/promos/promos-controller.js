@@ -12,7 +12,7 @@ async function getActivePromos(request, response, next) {
 
 async function createPromo(request, response, next) {
   try {
-    const { code, discount_percentage, max_discount, expiry_date } =
+    const { fare, code, discount_percentage, max_discount, expiry_date } =
       request.body;
 
     if (!code || !discount_percentage) {
@@ -23,22 +23,28 @@ async function createPromo(request, response, next) {
     }
 
     const success = await promosService.createPromo(
+      fare,
       code,
       discount_percentage,
       max_discount,
       expiry_date
     );
-    return response
-      .status(201)
-      .json({ message: 'Promo created successfully', data: success });
+    return response.status(201).json({ 
+        message: 'Promo created successfully', 
+        fare: fare,      
+        data: {
+          fare: fare,    
+          ...(success.toObject ? success.toObject() : success)     
+        } 
+    });
   } catch (error) {
-    return next(error);
-  }
+      return next(error);
+    }
 }
 
 async function validatePromo(request, response, next) {
   try {
-    const { code, ride_cost } = request.body;
+    const { code, fare } = request.body;
 
     const promo = await promosService.getPromoByCode(code);
 
@@ -49,17 +55,18 @@ async function validatePromo(request, response, next) {
       );
     }
 
-    let discountAmount = (promo.discount_percentage / 100) * ride_cost;
+    let discountAmount = (promo.discount_percentage / 100) * fare;
     if (promo.max_discount && discountAmount > promo.max_discount) {
       discountAmount = promo.max_discount;
     }
 
-    const finalCost = ride_cost - discountAmount;
+    const finalCost = fare - discountAmount;
 
     return response.status(200).json({
-      original_cost: ride_cost,
+      original_cost: fare,
       discount_amount: discountAmount,
       final_cost: finalCost,
+      fare: fare
     });
   } catch (error) {
     return next(error);
