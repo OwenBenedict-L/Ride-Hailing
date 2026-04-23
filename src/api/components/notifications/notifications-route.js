@@ -5,7 +5,7 @@ const notificationsController = require('./notifications-controller');
 const route = express.Router();
 
 module.exports = (app) => {
-  app.use('/api/notifications', route);
+  app.use('/notifications', route);
 
   // Mengambil semua notifikasi user
   route.get('/', notificationsController.getNotifications);

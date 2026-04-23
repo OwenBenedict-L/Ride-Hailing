@@ -6,15 +6,11 @@ async function getBalance(request, response, next) {
     const userId = request.params.id;
     const balanceData = await walletService.getBalance(userId);
 
-    if (!balanceData) {
-      throw errorResponder(
-        errorTypes.UNPROCESSABLE_ENTITY,
-        'User wallet not found'
-      );
-    }
-
     return response.status(200).json(balanceData);
   } catch (error) {
+    if (error.message === 'User wallet not found') {
+      return next(errorResponder(errorTypes.UNPROCESSABLE_ENTITY, error.message));
+    }
     return next(error);
   }
 }
@@ -23,28 +19,22 @@ async function topUpBalance(request, response, next) {
   try {
     const { userId, amount } = request.body;
 
-    // User ID is required
     if (!userId) {
       throw errorResponder(errorTypes.VALIDATION_ERROR, 'User ID is required');
     }
 
-    // Amount is required and must be greater than 0
     if (!amount || amount <= 0) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Top-up amount must be greater than 0'
-      );
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Amount must be > 0');
     }
 
     const topUpResult = await walletService.topUpBalance(userId, amount);
-
     return response.status(200).json(topUpResult);
   } catch (error) {
     return next(error);
   }
 }
 
-module.exports = {
-  getBalance,
-  topUpBalance,
+module.exports = { 
+  getBalance, 
+  topUpBalance 
 };
