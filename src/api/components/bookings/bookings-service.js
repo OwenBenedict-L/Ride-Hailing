@@ -93,7 +93,7 @@ async function updateBooking(id, status, driverId) {
 
   if (status === 'completed' && currentBooking.status !== 'completed') {
     if (currentBooking.driverId) {
-      await driversRepository.updateDriverState(currentBooking.driverId, {
+      await driversRepository.updateStatus(currentBooking.driverId, {
         activeBookingId: null,
       });
     }
