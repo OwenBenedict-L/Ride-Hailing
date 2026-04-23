@@ -6,16 +6,17 @@ module.exports = (db) =>
         email: String,
         password: String,
         fullNameDrivers: String,
+
         status: {
           type: String,
-          default: 'OFFLINE',
+          enum: ['AVAILABLE', 'BUSY', 'OFFLINE'], // Gunakan status kerja, bukan status booking
+          default: 'AVAILABLE',
         },
-
-        // location : {
-        //   type : Number,
-        //   la : { type : Number, default : 0 },
-        //   lo : { type : Number, default : 0 }
-        // }
+        activeBookingId: {
+          type: db.Schema.Types.ObjectId, // Tipe data ID yang benar
+          ref: 'Bookings', // Referensi ke model Bookings
+        default: null
+        },
 
         deleted: {
           type: Boolean,

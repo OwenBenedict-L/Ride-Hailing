@@ -9,6 +9,6 @@ module.exports = (app) => {
   route.get('/:id', driversController.getDriver);
   route.put('/:id', driversController.updateDriver);
   route.put('/changePassword', driversController.changePasswordDriver)
-  route.put('/:id/status', driversController.updateStatus);
+  route.get('/status/:id', driversController.getDriverStatus);
   route.delete('/:id', driversController.deleteDriver);
 }

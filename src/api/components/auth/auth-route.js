@@ -9,7 +9,7 @@ module.exports = (app) => {
   app.use('/auth', route);
 
   route.post('/register', authController.register);
-  route.post('/registerDriver', driversController.registerDriver);
+  route.post('/register/driver', driversController.registerDriver);
   route.post('/login', authController.login);
   route.get('/protected', authMiddleware, authController.testProtected);
 };

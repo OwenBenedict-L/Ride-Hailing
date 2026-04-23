@@ -4,7 +4,10 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
 
 async function sendMessage(req, res, next) {
   try {
-    const { ride_id, sender_id, message } = req.body;
+    const { 
+      ride_id, 
+      sender_id, 
+      message } = req.body;
 
     if (!ride_id || !sender_id || !message) {
       throw errorResponder(

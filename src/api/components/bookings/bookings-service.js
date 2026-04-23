@@ -92,6 +92,12 @@ async function updateBooking(id, status, driverId) {
   }
 
   if (status === 'completed' && currentBooking.status !== 'completed') {
+    if (currentBooking.driverId) {
+      await driversRepository.updateDriverState(currentBooking.driverId, {
+        activeBookingId: null,
+      });
+    }
+    
     try {
       await walletService.payForRide(
         currentBooking.userId,
@@ -119,7 +125,7 @@ async function updateBooking(id, status, driverId) {
       notifMessage = 'Your driver is on the way to your pickup location.';
 
       if (driverId) {
-        await driversRepository.updateStatus(driverId, 'busy');
+        await driversRepository.updateStatus(driverId, { status: 'pending', activeBookingId: id });
       }
     } else if (status === 'completed') {
       notifTitle = 'Order Completed';
@@ -127,7 +133,10 @@ async function updateBooking(id, status, driverId) {
 
       const finalDriverId = driverId || currentBooking.driverId;
       if (finalDriverId) {
-        await driversRepository.updateStatus(finalDriverId, 'available');
+        await driversRepository.updateStatus(finalDriverId, {
+          status: 'available',
+          activeBookingId: null
+        });
       }
     }
 
