@@ -24,10 +24,16 @@ async function createTicket(request, response, next) {
     return next(error);
   }
 }
-
+    
 async function addReply(request, response, next) {
   try {
-    const { id } = request.params;
+    let { id } = request.params;
+    
+    if (!id) {
+      const parts = request.originalUrl.split('/');
+      id = parts[parts.indexOf('tickets') + 1];
+    }
+
     const { sender, message } = request.body;
 
     if (!sender || !message) {
@@ -37,10 +43,8 @@ async function addReply(request, response, next) {
       );
     }
 
-    const updatedTicket = await ticketsService.addReply(id, {
-      sender,
-      message,
-    });
+    const updatedTicket = await ticketsService.addReply(id, { sender, message });
+
     return response.status(200).json(updatedTicket);
   } catch (error) {
     return next(error);
