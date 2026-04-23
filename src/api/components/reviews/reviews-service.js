@@ -1,8 +1,8 @@
-const reviewRepository = require('./review-repository');
+const reviewsRepository = require('./reviews-repository');
 const notificationsService = require('../notifications/notifications-service');
 
 async function getReview(rideId) {
-  const review = await reviewRepository.getReview(rideId);
+  const review = await reviewsRepository.getReview(rideId);
 
   if (!review) {
     throw new Error('Review has not been submitted for this ride!');
@@ -18,7 +18,7 @@ async function submitReview(rideId, rating, comment, userId) {
     comment,
   };
 
-  const createdReview = await reviewRepository.createNewReview(newReview);
+  const createdReview = await reviewsRepository.createNewReview(newReview);
 
   if (createdReview) {
     await notificationsService.createNotification(
@@ -41,7 +41,7 @@ async function modifyReview(rideId, newRating, newComment, userId) {
     updatedDate: new Date(),
   };
 
-  const updatedReview = await reviewRepository.updateReviewData(rideId, updateData);
+  const updatedReview = await reviewsRepository.updateReviewData(rideId, updateData);
 
   if (updatedReview) {
     await notificationsService.createNotification(

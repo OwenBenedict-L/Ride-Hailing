@@ -1,12 +1,12 @@
-const walletRepository = require('./wallet-repository');
+const walletsRepository = require('./wallets-repository');
 const notificationsService = require('../notifications/notifications-service');
 
 async function createWallet(userId) {
-  return walletRepository.createWallet(userId);
+  return walletsRepository.createWallet(userId);
 }
 
 async function getBalance(userId) {
-  const walletData = await walletRepository.getBalance(userId);
+  const walletData = await walletsRepository.getBalance(userId);
 
   if (!walletData) {
     throw new Error('User wallet not found');
@@ -16,7 +16,7 @@ async function getBalance(userId) {
 }
 
 async function topUpBalance(userId, amount) {
-  const wallet = await walletRepository.getBalance(userId);
+  const wallet = await walletsRepository.getBalance(userId);
 
   if (!wallet) {
     throw new Error('User wallet not found');
@@ -30,8 +30,8 @@ async function topUpBalance(userId, amount) {
     amount,
   };
 
-  await walletRepository.saveTransaction(transactionData);
-  const updatedWallet = await walletRepository.updateBalance(
+  await walletsRepository.saveTransaction(transactionData);
+  const updatedWallet = await walletsRepository.updateBalance(
     userId,
     finalBalance
   );
@@ -52,7 +52,7 @@ async function topUpBalance(userId, amount) {
 }
 
 async function payForRide(userId, amount) {
-  const wallet = await walletRepository.getBalance(userId);
+  const wallet = await walletsRepository.getBalance(userId);
 
   if (!wallet) {
     throw new Error('User wallet not found');
@@ -70,8 +70,8 @@ async function payForRide(userId, amount) {
     amount,
   };
 
-  await walletRepository.saveTransaction(transactionData);
-  const updatedWallet = await walletRepository.updateBalance(
+  await walletsRepository.saveTransaction(transactionData);
+  const updatedWallet = await walletsRepository.updateBalance(
     userId,
     finalBalance
   );
@@ -91,9 +91,15 @@ async function payForRide(userId, amount) {
   };
 }
 
+async function getHistory(userId) {
+  const history = await walletsRepository.getHistory(userId);
+  return history;
+}
+
 module.exports = {
   createWallet,
   getBalance,
   topUpBalance,
   payForRide,
+  getHistory,
 };

@@ -1,6 +1,7 @@
 const driversRepository = require('./drivers-repository');
 const bookingService = require('../bookings/bookings-service');
 const { hashPassword } = require('../../../utils/password');
+const notificationsService = require('../notifications/notifications-service');
 
 async function getDrivers() {
   return driversRepository.getDrivers();
@@ -21,7 +22,17 @@ async function registerDriver(email, password, fullName) {
     throw new Error('Email already exists');
   }
   const hashedPassword = await hashPassword(password);
-  return driversRepository.createDriver(email, hashedPassword, fullName);
+  const newDriver = await driversRepository.createDriver(email, hashedPassword, fullName);
+
+  if (newDriver) {
+    await notificationsService.createNotification(
+      newDriver._id.toString(),
+      'Welcome, Driver!',
+      `Hi ${fullName}, your driver account has been registered!`,
+      'system'
+    );
+  }
+  return newDriver;
 }
 
 async function updateDriver(id, email, fullNameDriver) {
