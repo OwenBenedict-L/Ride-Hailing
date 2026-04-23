@@ -3,20 +3,28 @@ module.exports = (db) =>
     'Drivers',
     db.Schema(
       {
-        email: String,
-        password: String,
-        fullNameDrivers: String,
+        email: {
+          type: String,
+          required: true,
+        },
+        password: {
+          type: String,
+          required: true,
+        },
+        fullNameDrivers: {
+          type: String,
+          required: true,
+        },
         status: {
           type: String,
-          default: 'OFFLINE',
+          enum: ['Available', 'Busy', 'Offline'],
+          default: 'Available',
         },
-
-        // location : {
-        //   type : Number,
-        //   la : { type : Number, default : 0 },
-        //   lo : { type : Number, default : 0 }
-        // }
-
+        activeBookingId: {
+          type: db.Schema.Types.ObjectId,
+          ref: 'Bookings',
+          default: null
+        },
         deleted: {
           type: Boolean,
           default: false,

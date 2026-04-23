@@ -1,11 +1,16 @@
 const { Chats } = require('../../../models');
 
-async function sendMessage(data) {
-  return Chats.create(data);
+async function sendMessage(rideId, sender, message) {
+  return Chats.create({
+    rideId,
+    sender,
+    message,
+    created_at: new Date(),
+  });
 }
 
-async function getMessages(ride_id) {
-  return Chats.find({ ride_id }).sort({ created_at: 1 });
+async function getMessages(rideId) {
+  return Chats.find({ rideId }).sort({ created_at: 1 });
 }
 
 async function editMessage(id, message) {

@@ -2,10 +2,22 @@ module.exports = (db) =>
   db.model(
     'Chats',
     db.Schema({
-      ride_id: String,
-      sender: String, // user / driver
-      message: String,
-      created_at: { type: Date, default: Date.now },
+      rideId: {
+        type: String,
+        required: true,
+      },
+      sender: {
+        type: String,
+        required: true,
+      },
+      message: {
+        type: String,
+        required: true,
+      },
+      created_at: {
+        type: Date, 
+        default: Date.now 
+      },
       updated_at: Date,
     })
   );

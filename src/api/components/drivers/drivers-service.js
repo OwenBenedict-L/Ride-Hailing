@@ -43,35 +43,30 @@ async function changePasswordDriver(id, password) {
   return driversRepository.changePasswordDriver(id, password);
 }
 
-async function acceptBooking(driverId, bookingId) {
+async function getDriverStatus(driverId) {
   const driver = await driversRepository.getDriver(driverId);
+  if (!driver) throw new Error('Driver not found');
 
-  if (!driver) {
-    throw new Error('Driver not found');
+  if (!driver.activeBookingId) {
+    return {
+      status: 'available',
+      booking: null,
+    };
   }
 
-  if (driver.status !== 'available') {
-    throw new Error('Driver is not available');
+  const booking = await bookingService.getBooking(driver.activeBookingId);
+
+  if (!booking) {
+    return {
+      status: driver.status,
+      booking: null,
+    };
   }
 
-  const booking = await bookingService.getBooking(bookingId);
-
-  if (!booking || booking.status !== 'pending') {
-    throw new Error('Booking not available');
-  }
-
-  const updatedBooking = await bookingService.updateBooking(
-    bookingId,
-    'confirmed',
-    driverId,
-  );
-
-  await driversRepository.updateStatus(driverId, 'busy');
-  return updatedBooking;
-}
-
-async function updateStatus(id, status) {
-  return driversRepository.updateStatus(id, status);
+  return {
+    status: booking.status,
+    booking,
+  };
 }
 
 async function deleteDriver(id) {
@@ -85,7 +80,6 @@ module.exports = {
   registerDriver,
   updateDriver,
   changePasswordDriver,
-  acceptBooking,
-  updateStatus,
+  getDriverStatus,
   deleteDriver,
 };
