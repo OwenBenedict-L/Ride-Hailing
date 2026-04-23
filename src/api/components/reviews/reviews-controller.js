@@ -51,7 +51,7 @@ async function postReview(request, response, next) {
 
 async function putReview(request, response, next) {
   try {
-    const { rideId, rating, comment } = request.body;
+    const { rideId, rating, comment, userId } = request.body;
 
     // Ride ID is required
     if (!rideId) {
@@ -69,7 +69,8 @@ async function putReview(request, response, next) {
     const updatedReview = await reviewsService.modifyReview(
       rideId,
       rating,
-      comment
+      comment,
+      userId
     );
 
     return response.status(200).json(updatedReview);
