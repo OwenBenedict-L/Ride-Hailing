@@ -2,7 +2,6 @@ const express = require('express');
 
 const auth = require('./components/auth/auth-route');
 const promos = require('./components/promos/promos-route');
-const books = require('./components/books/books-route');
 const users = require('./components/users/users-route');
 const wallets = require('./components/wallets/wallets-route');
 const reviews = require('./components/reviews/reviews-route');
@@ -17,7 +16,6 @@ module.exports = () => {
   const app = express.Router();
 
   auth(app);
-  books(app);
   promos(app);
   users(app);
   wallets(app);
