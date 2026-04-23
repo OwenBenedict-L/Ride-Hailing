@@ -36,7 +36,8 @@ async function createBooking(request, response, next) {
     const booking = await bookingsService.createBooking(
       userId,
       pickupLocation,
-      destinationLocation
+      destinationLocation,
+      promoCode
     );
 
     if (!booking) {
