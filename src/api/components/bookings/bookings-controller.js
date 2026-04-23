@@ -59,9 +59,9 @@ async function createBooking(request, response, next) {
 async function updateBooking(request, response, next) {
   try {
     const { id } = request.params;
-    const payload = request.body;
+    const { status, driverId } = request.body;
 
-    const success = await bookingsService.updateBooking(id, payload);
+    const success = await bookingsService.updateBooking(id, status, driverId);
 
     if (!success) {
       throw errorResponder(
