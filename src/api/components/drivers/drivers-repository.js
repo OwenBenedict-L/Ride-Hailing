@@ -40,7 +40,7 @@ async function updateStatus(id, payload) {
 
 async function deleteDriver(id) {
   return Drivers.updateOne({ _id: id }, { 
-    $set: { deleted: true, status : "OFFLINE" } }
+    $set: { deleted: true, status : "offline" } }
   );
 }
 
