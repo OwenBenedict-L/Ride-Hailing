@@ -1,33 +1,33 @@
 const chatService = require('./chats-service');
-const Bookings = require('../../../models');
+const bookingsService = require('../bookings/bookings-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
 async function sendMessage(req, res, next) {
   try {
     const { 
-      ride_id, 
-      sender_id, 
+      rideId, 
+      senderId, 
       message } = req.body;
 
-    if (!ride_id || !sender_id || !message) {
+    if (!rideId || !senderId || !message) {
       throw errorResponder(
         errorTypes.VALIDATION_ERROR,
         'All fields required'
       );
     }
 
-    const booking = await Bookings.findById(ride_id);
+    const booking = await bookingsService.getBooking(rideId);
 
     if (!booking) {
       throw errorResponder(errorTypes.NOT_FOUND, 'Booking not found');
     }
     let sender;
 
-    if (sender_id === booking.userId.toString()) {
+    if (senderId === booking.userId.toString()) {
       sender = 'user';
     } 
     else if
-      (booking.driverId && sender_id === booking.driverId.toString()) {
+      (booking.driverId && senderId === booking.driverId.toString()) {
       sender = 'driver';
     } 
     else {
@@ -37,11 +37,11 @@ async function sendMessage(req, res, next) {
       );
     }
 
-    const result = await chatService.sendMessage({
-      ride_id,
-      sender,
-      message,
-    });
+    const result = await chatService.sendMessage(
+      rideId, 
+      sender, 
+      message
+    );
 
     return res.status(200).json(result);
   } catch (err) {
@@ -51,9 +51,9 @@ async function sendMessage(req, res, next) {
 
 async function getMessages(req, res, next) {
   try {
-    const { ride_id } = req.params;
+    const { rideId } = req.params;
 
-    const messages = await chatService.getMessages(ride_id);
+    const messages = await chatService.getMessages(rideId);
 
     return res.status(200).json(messages);
   } catch (err) {
