@@ -81,21 +81,35 @@ localhost:5001/api/estimations/url/route
 
 let responseData = pm.response.json();
 pm.environment.set("harga_estimasi", responseData.fare);
-pm.environment.set("id_estimasi", responseData._id); 
+pm.environment.set("id_estimasi", responseData._id);
+
+### Validate Promo
 
 localhost:5001/api/promos/validate
 {
-  "estimationId": "{{id_estimasi}}",
-  "code": "UNTAR",
-  "fare": "{{harga_estimasi}}"
+"estimationId": "{{id_estimasi}}",
+"code": "UNTAR",
+"fare": "{{harga_estimasi}}"
 }
+
+### Create Promo
 
 localhost:5001/api/promos
 {
-  "estimationId": "{{id_estimasi}}", //optional
-  "fare": "{{harga_estimasi}}",
-  "code": "UNTAR", 
-  "discount_percentage": 20,
-  "max_discount": 15000,
-  "expiry_date": "2026-12-31T23:59:59.000Z"
+"estimationId": "{{id_estimasi}}", //optional
+"fare": "{{harga_estimasi}}",
+"code": "UNTAR",
+"discount_percentage": 20,
+"max_discount": 15000,
+"expiry_date": "2026-12-31T23:59:59.000Z"
+}
+
+### LOGIN DARREN
+
+localhost:5001/api/auth/login
+{
+
+    "email": "darren123@gmail.com",
+    "password": "12345678"
+
 }

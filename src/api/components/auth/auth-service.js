@@ -27,7 +27,7 @@ async function register(email, password, fullName) {
 function generateToken(id, email, role) {
   const secretKey = 'RANDOM_STRING';
   const payload = {
-    id,
+    id: id.toString(),
     email,
     role,
     timestamp: Date.now(),
@@ -39,26 +39,27 @@ function generateToken(id, email, role) {
 
 async function checkLogin(email, password) {
   const result = await authRepository.getByEmail(email);
-  const pass = pass ? pass.password : '<RANDOM>';
-  const loginPassed = await passwordMatched(password, pass);
 
-  const { account, role } = result;
+  if (!result) return null;
 
-  if (account && loginPassed) {
+  const hashedPassword = result.account.password;
+  const loginPassed = await passwordMatched(password, hashedPassword);
+
+  if (loginPassed) {
+    const userAccount = result.account;
+    const userRole = result.role;
+
+    // Ambil ID dan pastikan jadi string agar tidak jadi [object Object] di token
+    const userId = (userAccount._id || userAccount.id).toString();
+
     return {
-      email: account.email,
-      role,
-      token: generateToken({
-        id: account.id,
-        email: account.email,
-        role,
-      }),
+      email: userAccount.email,
+      role: userRole,
+      token: generateToken(userId, userAccount.email, userRole),
     };
   }
+
   return null;
 }
 
-module.exports = {
-  checkLogin,
-  register,
-};
+module.exports = { checkLogin, register };

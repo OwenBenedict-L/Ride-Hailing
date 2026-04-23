@@ -31,9 +31,9 @@ async function register(request, response, next) {
       );
     }
 
-    const success = await authService.register(email, password, fullName);
+    const newUser = await authService.register(email, password, fullName);
 
-    if (!success) {
+    if (!newUser) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
         'Failed to register user'

@@ -2,13 +2,14 @@ const { Wallets, Transactions } = require('../../../models');
 
 async function createWallet(userId) {
   return Wallets.create({
-    userId: userId,
+    userId: userId.toString(),
     balance: 0,
   });
 }
 
 async function getBalance(userId) {
-  return Wallets.findOne({ userId });
+  // Cari berdasarkan userId string
+  return Wallets.findOne({ userId: userId.toString() });
 }
 
 async function saveTransaction(transactionData) {
@@ -17,7 +18,7 @@ async function saveTransaction(transactionData) {
 
 async function updateBalance(userId, newBalance) {
   return Wallets.findOneAndUpdate(
-    { userId },
+    { userId: userId.toString() },
     { $set: { balance: newBalance } },
     { new: true }
   );
