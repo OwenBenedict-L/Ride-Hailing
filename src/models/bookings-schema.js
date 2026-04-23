@@ -32,6 +32,10 @@ module.exports = (db) =>
           type: Number, // dalam km
           required: true,
         },
+        promoCode: {
+          type: String,
+          default: null,
+        },
       },
       {
         timestamps: true,

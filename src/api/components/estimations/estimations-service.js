@@ -21,10 +21,10 @@ async function getEstimationById(id) {
 }
 
 async function updateEstimationRoute(id, data) {
-  const updatedFare = 25000; 
+  const updatedFare = 25000;
   return estimationsRepository.updateRoute(id, {
     ...data,
-    Fare: updatedFare
+    Fare: updatedFare,
   });
 }
 

@@ -2,7 +2,8 @@ const bookingRepository = require('./bookings-repository');
 const notificationsService = require('../notifications/notifications-service');
 const estimationService = require('../estimations/estimations-service.js');
 const driversRepository = require('../drivers/drivers-repository');
-const walletService = require('../wallet/wallet-service'); 
+const walletService = require('../wallet/wallet-service');
+const promosService = require('../promos/promos-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
 async function getHistory(userId) {
@@ -20,7 +21,8 @@ async function getBooking(id) {
 async function createBooking(
   userId,
   pickupLocation,
-  destinationLocation
+  destinationLocation,
+  promoCode
 ) {
   const activeBookings = await bookingRepository.getActives(userId);
   if (activeBookings.length > 0) {
@@ -29,18 +31,35 @@ async function createBooking(
       'You still have an active booking, please complete or cancel it first.'
     );
   }
-    const estimation = await estimationService.createEstimation(userId, {
+  const estimation = await estimationService.createEstimation(userId, {
     origin: pickupLocation,
     destination: destinationLocation,
   });
 
+  let finalFare = estimation.fare;
+  let appliedPromo = null;
+
+  if (promoCode) {
+    try {
+      const promoResult = await promosService.calculateDiscount(
+        promoCode,
+        finalFare
+      );
+
+      finalFare = promoResult.finalFare;
+      appliedPromo = promoResult.promoCode;
+    } catch (error) {
+      throw errorResponder(errorTypes.VALIDATION_ERROR, error.message);
+    }
+  }
+
   const userWallet = await walletService.getBalance(userId);
   const currentBalance = userWallet ? userWallet.balance : 0;
-  
-  if (currentBalance < estimation.fare) {
+
+  if (currentBalance < finalFare) {
     throw errorResponder(
       errorTypes.VALIDATION_ERROR,
-      `Insufficient wallet balance. Fare is Rp ${estimation.fare}, but your balance is only Rp ${currentBalance}. Please top-up.`
+      `Insufficient wallet balance. Fare is Rp ${finalFare}, but your balance is only Rp ${currentBalance}. Please top-up.`
     );
   }
 
@@ -48,9 +67,10 @@ async function createBooking(
     userId,
     pickupLocation,
     destinationLocation,
-    fare: estimation.fare,
+    fare: finalFare,
     distance: estimation.distance,
     status: 'pending',
+    promoCode: appliedPromo,
   });
 
   if (booking) {
@@ -71,9 +91,12 @@ async function updateBooking(id, status, driverId) {
     throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Booking not found');
   }
 
-   if (status === 'completed' && currentBooking.status !== 'completed') {
+  if (status === 'completed' && currentBooking.status !== 'completed') {
     try {
-      await walletService.payForRide(currentBooking.userId, currentBooking.fare);
+      await walletService.payForRide(
+        currentBooking.userId,
+        currentBooking.fare
+      );
     } catch (error) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
@@ -98,7 +121,6 @@ async function updateBooking(id, status, driverId) {
       if (driverId) {
         await driversRepository.updateStatus(driverId, 'busy');
       }
-
     } else if (status === 'completed') {
       notifTitle = 'Order Completed';
       notifMessage = 'Your trip has been completed successfully. Thank you!';
