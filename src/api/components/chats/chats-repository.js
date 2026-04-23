@@ -1,7 +1,12 @@
 const { Chats } = require('../../../models');
 
-async function sendMessage(data) {
-  return Chats.create(data);
+async function sendMessage(ride_id, sender, message) {
+  return Chats.create({
+    ride_id,
+    sender,
+    message,
+    created_at: new Date(),
+  });
 }
 
 async function getMessages(ride_id) {

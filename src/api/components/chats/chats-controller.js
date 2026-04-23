@@ -1,19 +1,43 @@
 const chatService = require('./chats-service');
+const Bookings = require('../../../models');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
 async function sendMessage(req, res, next) {
   try {
-    const { ride_id, message } = req.body;
+    const { ride_id, sender_id, message } = req.body;
 
-    if (!ride_id || !message) {
-      throw errorResponder(errorTypes.VALIDATION_ERROR, 'All fields required');
+    if (!ride_id || !sender_id || !message) {
+      throw errorResponder(
+        errorTypes.VALIDATION_ERROR,
+        'All fields required'
+      );
+    }
+
+    const booking = await Bookings.findById(ride_id);
+
+    if (!booking) {
+      throw errorResponder(errorTypes.NOT_FOUND, 'Booking not found');
+    }
+    let sender;
+
+    if (sender_id === booking.userId.toString()) {
+      sender = 'user';
+    } 
+    else if
+      (booking.driverId && sender_id === booking.driverId.toString()) {
+      sender = 'driver';
+    } 
+    else {
+      throw errorResponder(
+        errorTypes.UNAUTHORIZED,
+        'Error!'
+      );
     }
 
     const result = await chatService.sendMessage({
       ride_id,
+      sender,
       message,
-      sender_id: req.user.id,
-      sender_type: req.user.role,
     });
 
     return res.status(200).json(result);
