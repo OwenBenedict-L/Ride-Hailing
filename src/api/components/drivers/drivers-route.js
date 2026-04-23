@@ -5,7 +5,7 @@ const route = express.Router();
 module.exports = (app) => {
   app.use('/drivers', route);
 
-  // Membuka profile yang berisi data-data driver
+  // Membuka profile yang berisi data driver-driver
   route.get('/profile', driversController.getDrivers);
 
   // Melihat seluruh database drivers yang ada
