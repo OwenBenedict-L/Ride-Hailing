@@ -31,17 +31,10 @@ async function getDriver(request, response, next) {
 
 async function registerDriver(req, res, next) {
   try {
-    const {
-      email,
-      password,
-      full_name: fullName,
-    } = req.body;
+    const { email, password, full_name: fullName } = req.body;
 
     if (!email || !password || !fullName) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'All fields required'
-      );
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'All fields required');
     }
 
     if (password.length < 8) {
@@ -58,9 +51,7 @@ async function registerDriver(req, res, next) {
     });
   } catch (err) {
     if (err.message === 'Email already exists') {
-      return next(
-        errorResponder(errorTypes.EMAIL_ALREADY_TAKEN, err.message)
-      );
+      return next(errorResponder(errorTypes.EMAIL_ALREADY_TAKEN, err.message));
     }
     return next(err);
   }
@@ -83,10 +74,7 @@ async function updateDriver(request, response, next) {
     }
 
     if (!fullNameDriver) {
-      throw errorResponder(
-        errorTypes.VALIDATION_ERROR,
-        'Full Name is needed!'
-      );
+      throw errorResponder(errorTypes.VALIDATION_ERROR, 'Full Name is needed!');
     }
 
     if (email !== driver.email && (await driversService.emailExists(email))) {
@@ -114,7 +102,7 @@ async function updateDriver(request, response, next) {
 
 async function changePasswordDriver(request, response, next) {
   try {
-    const driverId = request.driver.id;
+    const driverId = request.user.id;
     const {
       old_password: oldPassword,
       new_password: newPassword,
@@ -153,7 +141,7 @@ async function changePasswordDriver(request, response, next) {
     }
 
     const hashedNewPassword = await hashPassword(newPassword);
-    const success = await driversService.changePassword(
+    const success = await driversService.changePasswordDriver(
       driverId,
       hashedNewPassword
     );
@@ -191,16 +179,15 @@ async function getDriverStatus(req, res, next) {
   }
 }
 
-
 async function deleteDriver(request, response, next) {
   try {
     const success = await driversService.deleteDriver(request.params.id);
 
     if (!success) {
-      throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Gagal terhapus!');
+      throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Failed!');
     }
 
-    return response.status(200).json({ message: 'Akun telah dihapus' });
+    return response.status(200).json({ message: 'Account has been deleted' });
   } catch (error) {
     return next(error);
   }
