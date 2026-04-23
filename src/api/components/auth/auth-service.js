@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const authRepository = require('./auth-repository');
 const usersRepository = require('../users/users-repository');
-const walletService = require('../wallet/wallet-service');
+const walletsService = require('../wallets/wallets-service');
 const { passwordMatched, hashPassword } = require('../../../utils/password');
 const notificationsService = require('../notifications/notifications-service');
 
@@ -19,7 +19,7 @@ async function register(email, password, fullName) {
   );
 
   if (newUser) {
-    await walletService.createWallet(newUser._id.toString());
+    await walletsService.createWallet(newUser._id.toString());
     await notificationsService.createNotification(
       newUser._id.toString(),
       'Welcome!',
