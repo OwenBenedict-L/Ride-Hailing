@@ -48,7 +48,7 @@ async function createBooking(request, response, next) {
     }
 
     return response.status(201).json({
-      message: 'Booking created successfully!',
+      message: 'Booking created successfully',
       data: booking,
     });
   } catch (error) {
