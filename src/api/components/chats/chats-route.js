@@ -1,14 +1,20 @@
 const express = require('express');
 const chatController = require('./chats-controller');
-const authenticate = require('../../middlewares/authentication');
 
 const route = express.Router();
 
 module.exports = (app) => {
-  app.use('/chat', route);
+  app.use('/chats', route);
 
-  route.post('/send', authenticate, chatController.sendMessage);
-  route.get('/messages/:ride_id', chatController.getMessages);
+  // Mengirimkan message sesuai dengan role-nya (Driver/User)
+  route.post('/send', chatController.sendMessage);
+
+  // Melihat seluruh log chats
+  route.get('/messages/:rideId', chatController.getMessages);
+
+  // Mengedit message yang sudah dikirim sebelumnya
   route.put('/edit', chatController.editMessage);
+
+  // Menghapus message
   route.delete('/messages/:id', chatController.deleteMessage);
 };

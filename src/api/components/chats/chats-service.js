@@ -1,11 +1,11 @@
 const chatRepository = require('./chats-repository');
 
-async function sendMessage(data) {
-  return chatRepository.sendMessage(data);
+async function sendMessage(rideId, sender, message) {
+  return chatRepository.sendMessage(rideId, sender, message);
 }
 
-async function getMessages(ride_id) {
-  return chatRepository.getMessages(ride_id);
+async function getMessages(rideId) {
+  return chatRepository.getMessages(rideId);
 }
 
 async function editMessage(id, message) {

@@ -173,15 +173,24 @@ async function changePasswordDriver(request, response, next) {
   }
 }
 
-async function updateStatus(request, response, next) {
+async function getDriverStatus(req, res, next) {
   try {
-    const { status } = request.body;
-    await driversService.updateStatus(request.params.id, status);
-    return response.status(200).json({ message: 'Status driver has been updated', status });
-  } catch (error) {
-    return next(error);
+    const driverId = req.params.id;
+
+    if (!driverId) {
+      return res.status(400).json({
+        message: 'Driver ID is required',
+      });
+    }
+
+    const result = await driversService.getDriverStatus(driverId);
+
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
   }
 }
+
 
 async function deleteDriver(request, response, next) {
   try {
@@ -203,6 +212,6 @@ module.exports = {
   registerDriver,
   updateDriver,
   changePasswordDriver,
-  updateStatus,
+  getDriverStatus,
   deleteDriver,
 };

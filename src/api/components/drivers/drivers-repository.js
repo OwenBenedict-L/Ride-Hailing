@@ -12,7 +12,6 @@ async function createDriver(email, password, fullName) {
   return Drivers.create({ email, password, fullName });
 }
 
-
 async function getDriverByEmail(email) {
   return Drivers.findOne({ email });
 }
@@ -21,19 +20,6 @@ async function updateDriver(id, email, fullNameDrivers) {
   return Drivers.updateOne({ _id: id }, { $set: { email, fullNameDrivers } });
 }
 
-// async function updateTracking(id, status, lat, lng) {
-//   return Drivers.updateOne(
-//     { _id: id },
-//     { 
-//       $set: { 
-//         status, 
-//         location: { lat, lng },
-//         last_updated: new Date() 
-//       } 
-//     }
-//   );
-// }
-
 async function changeDriverPassword(id, password) {
   return Drivers.updateOne(
     { _id: id },
@@ -41,19 +27,20 @@ async function changeDriverPassword(id, password) {
   );
 }
 
-async function updateStatus(id, status) {
+async function updateStatus(id, payload) {
+  if (typeof payload !== 'object') {
+    payload = { status: payload };
+  }
+
   return Drivers.updateOne(
     { _id: id },
-    { $set: { 
-        status,
-        last_updated: new Date() 
-      } }
+    { $set: payload },
   );
 }
 
 async function deleteDriver(id) {
   return Drivers.updateOne({ _id: id }, { 
-    $set: { deleted: true, status : "OFFLINE" } }
+    $set: { deleted: true, status : "offline" } }
   );
 }
 
