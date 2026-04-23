@@ -2,7 +2,7 @@ const bookingRepository = require('./bookings-repository');
 const notificationsService = require('../notifications/notifications-service');
 const estimationService = require('../estimations/estimations-service.js');
 const driversRepository = require('../drivers/drivers-repository');
-const walletService = require('../wallet/wallet-service');
+const walletsService = require('../wallets/wallets-service.js');
 const promosService = require('../promos/promos-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
@@ -53,7 +53,7 @@ async function createBooking(
     }
   }
 
-  const userWallet = await walletService.getBalance(userId);
+  const userWallet = await walletsService.getBalance(userId);
   const currentBalance = userWallet ? userWallet.balance : 0;
 
   if (currentBalance < finalFare) {
@@ -93,7 +93,7 @@ async function updateBooking(id, status, driverId) {
 
   if (status === 'completed' && currentBooking.status !== 'completed') {
     try {
-      await walletService.payForRide(
+      await walletsService.payForRide(
         currentBooking.userId,
         currentBooking.fare
       );

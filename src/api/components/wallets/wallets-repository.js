@@ -8,7 +8,6 @@ async function createWallet(userId) {
 }
 
 async function getBalance(userId) {
-  // Cari berdasarkan userId string
   return Wallets.findOne({ userId: userId.toString() });
 }
 
@@ -24,9 +23,14 @@ async function updateBalance(userId, newBalance) {
   );
 }
 
+async function getHistory(userId) {
+  return Transactions.find({ userId }).sort({ _id: -1 });
+}
+
 module.exports = {
   createWallet,
   getBalance,
   saveTransaction,
   updateBalance,
+  getHistory,
 };

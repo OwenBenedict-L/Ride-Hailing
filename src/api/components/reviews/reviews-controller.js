@@ -1,10 +1,10 @@
-const reviewService = require('./review-service');
+const reviewsService = require('./reviews-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
 async function getReview(request, response, next) {
   try {
     const rideId = request.params.ride_id;
-    const review = await reviewService.getReview(rideId);
+    const review = await reviewsService.getReview(rideId);
 
     if (!review) {
       throw errorResponder(
@@ -21,7 +21,7 @@ async function getReview(request, response, next) {
 
 async function postReview(request, response, next) {
   try {
-    const { rideId, rating, comment } = request.body;
+    const { rideId, rating, comment, userId} = request.body;
 
     // Ride ID is required
     if (!rideId) {
@@ -36,10 +36,11 @@ async function postReview(request, response, next) {
       );
     }
 
-    const savedReview = await reviewService.submitReview(
+    const savedReview = await reviewsService.submitReview(
       rideId,
       rating,
-      comment
+      comment,
+      userId
     );
 
     return response.status(201).json(savedReview);
@@ -65,7 +66,7 @@ async function putReview(request, response, next) {
       );
     }
 
-    const updatedReview = await reviewService.modifyReview(
+    const updatedReview = await reviewsService.modifyReview(
       rideId,
       rating,
       comment

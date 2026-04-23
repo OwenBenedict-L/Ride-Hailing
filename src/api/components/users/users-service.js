@@ -1,5 +1,5 @@
 const usersRepository = require('./users-repository');
-const walletService = require('../wallet/wallet-service');
+const walletsService = require('../wallets/wallets-service');
 
 async function getUsers() {
   return usersRepository.getUsers();
@@ -18,7 +18,7 @@ async function createUser(email, password, fullName) {
   const newUser = await usersRepository.createUser(email, password, fullName);
 
   if (newUser) {
-    await walletService.createWallet(newUser._id.toString());
+    await walletsService.createWallet(newUser._id.toString());
   }
 
   return newUser;
