@@ -12,7 +12,97 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 
 # ENDPOINTS
 
----
+## USERS (Elfrandt Goldjer (535250092))
+### Register Users
+
+POST localhost:5001/api/auth/register
+{
+"email": "elfrandtgold77@gmail.com",
+"password": "G1o2l3d4j5e6r7!?",
+"full_name": "Elfrandt Ganteng",
+"confirm_password": "G1o2l3d4j5e6r7!?"
+}
+
+### Get Users
+
+GET localhost:5001/api/users
+
+### Login Users
+
+POST localhost:5001/api/auth/login
+{
+"email": "elfrandtgold77@gmail.com",
+"password": "G1o2l3d4j5e6r7!?"
+}
+
+### Protected
+
+GET localhost:5001/api/auth/protected
+Headers: Authentication, jwt {token}
+
+### Profile Users{
+"estimationId": "{{id_estimasi}}",
+"code": "UNTAR",
+"fare": "{{harga_estimasi}}"
+}
+
+GET localhost:5001/api/users/profile
+
+### Update Profile
+
+PUT localhost:5001/api/users/profile
+{
+"phone_number": "085770607933",
+"profile_picture": "https://images.ctfassets.net/100cwma5ubtt/1GiiFUhJfnfFaV9apeWqYo/24d806d058e8892474c72197daec2486/FS_1440x810_cat-entertainment_7-reasons-you-should-adopt-a-cat.jpg?fm=webp&w=1200&q=50"
+}
+
+### Change Password
+
+PUT localhost:5001/api/users/change-password
+{
+"old_password": "G1o2l3d4j5e6r7!?",
+"new_password": "12345678",
+"confirm_new_password": "12345678"
+}
+
+### Update Users
+
+PUT localhost:5001/api/users/:id
+{
+"email": "email_baru@untar.ac.id",
+"full_name": "Nama Baru Tersimpan"
+}
+
+### Delete Users
+
+DELETE localhost:5001/api/users/:id
+
+## Promo (Elfrandt Goldjer (535250092))
+
+### Get Promo
+
+GET localhost:5001/api/promos
+
+### Delete Promo
+
+DELETE localhost:5001/api/promos/:id
+
+### Validate Promo
+
+POST localhost:5001/api/promos/validate
+
+
+### Create Promo
+
+POST localhost:5001/api/promos
+{
+"estimationId": "{{id_estimasi}}", //optional
+"fare": "{{harga_estimasi}}",
+"code": "UNTAR",
+"discount_percentage": 20,
+"max_discount": 15000,
+"expiry_date": "2026-12-31T23:59:59.000Z"
+}
 
 ## REVIEWS (William Richie 535250075)
 
@@ -93,7 +183,136 @@ Melihat riwayat transaksi wallet user
 
 ---
 
---- owen
+## DRIVERS (Owen Benedict Lukman 5353250067)
+
+### Register Driver
+
+Membuat akun baru untuk drivers
+1. Endpoint: POST /api/auth/register/driver
+2. URL: localhost:5000/api/auth/register/driver
+3. Parameter: email, full_name, password, confirm_password
+4. Input: Request Body (dibagian raw)
+```
+{
+    "email": "string (email yang akan dimasukkan)",
+    "full_name": "string (nama dari driver)",
+    "password": "string (susunan kata sebagai pertahanan keamanan)",
+    "confirm_password": "string (memastikan susunan kata di password sudah benar)"
+}
+```
+
+### Login Driver
+
+Membuat ke dalam akun driver dengan password untuk meningkatkan keamanan.
+1. Endpoint: POST /api/auth/login
+2. URL: localhost:5000/api/auth/login
+3. Parameter: email, password
+4. Input: Request Body (dibagian raw)
+```
+{
+    "email": "string (email yang akan dimasukkan)",
+    "password": "string (susunan kata sebagai pertahanan keamanan)"
+}
+```
+
+### Cek Drivers Profile
+
+Mengakses data-data dari seluruh akun drivers yang terdaftar di database.
+1. Endpoint: GET /api/drivers/profile
+2. URL: localhost:5000/api/drivers/profile
+
+### Change Password (Mengubah Password)
+
+Mengubah data password dalam akun driver
+1. Endpoint: POST /api/drivers/changePassword
+2. URL: localhost:5000/api/drivers/changePassword
+3. Parameter: key (json web token), old_password, new_password, confirm_new_password
+4. Input: Request Header + Request Body (dibagian raw)
+```
+key: Authentication
+value: jwt <RANDOM_STRING>
+```
+
+```
+{
+    "old_password": "string (berisi password lama yang ingin diubah)",
+    "new_password": "string (berisi password baru yang akan digunakan)",
+    "confirm_new_password": "string (memastikan bahwa password yang ingin digunakan sudah sama)"
+}
+```
+
+### Update Name (Mengubah nama driver)
+
+Mengubah nama driver yang terdaftar di dalam database.
+1. Endpoint: PUT /api/drivers/:id (:id itu userId)
+2. URL: localhost:5000/api/drivers/:id (:id itu userId)
+3. Parameter: email, full_name
+4. Input: Request Body (dibagian raw)
+```
+{
+    "email": "string (email dari driver)",
+    "full_name": "string (nama yang akan menggantikan nama lama di database driver)"
+}
+```
+
+### Status Driver
+
+Melihat status driver pada bookings
+1. Endpoint: GET /api/drivers/status/:id (:id itu userId)
+2. URL: localhost:5000/api/drivers/status/:id (:id itu userId)
+
+### Delete Driver (Menghapus akun driver)
+
+Menghapus akun driver secara halus (Data tetap ada, namun sudah tidak bisa diakses >> Supaya tidak error saat di endpoint lain)
+1. Endpoint: DELETE /api/drivers/:id (:id itu userId)
+2. URL: localhost:5000/api/drivers/:id (:id itu userId)
+
+---
+
+## CHATS (Owen Benedict Lukman 5353250067)
+
+### Send Message (Memberi pesan)
+
+Memberikan message kepada pihak lain.
+1. Endpoint: POST /api/chats/send
+2. URL: localhost:5000/api/chats/send
+3. Parameter: rideId, senderId, message
+4. Input: Request Body (dibagian raw)
+```
+{
+    "rideId": "string (id yang sama dengan bookingsId)",
+    "senderId": "string (id yang dimasukkan antara userId dan driverId, yang akan menentukan role nya)",
+    "message": "string (isi pesan yang akan dikirim)
+}
+```
+
+### Chat Log
+
+Mengakses isi chat dari sender (Tidak peduli itu user atau driver).
+1. Endpoint: GET /api/chats/messages/:id (:id itu rideId)
+2. URL: localhost:5000/api/messages/:id (:id itu rideId)
+
+### Edit Message (Mengubah pesan)
+
+Mengedit dan mengubah pesan yang dikirim sebelumnya.
+1. Endpoint: POST /api/chats/edit
+2. URL: localhost:5000/api/chats/edit
+3. Parameter: id, message
+4. Input: Request Body (dibagian raw)
+```
+{
+    "id": "string (id yang digunakan adalah chatId)",
+    "message": "string (isi pesan yang akan mengedit pesan lama)
+}
+```
+
+### Delete Chat (Menghapus pesan)
+
+Menghapus pesan yang sudah dikirimkan
+1. Endpoint: GET /api/chats/messages/:id (:id itu chatId)
+2. URL: localhost:5000/api/chats/messages/:id (:id itu chatId)
+
+---
 
 ## BOOKINGS (Sheireen Sadeli 535250083)
 
