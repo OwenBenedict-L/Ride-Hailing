@@ -1,21 +1,97 @@
-# Backend Programming Template (2025)
+# UTS Backend (Ride-Hailing)
 
-## Development Setup
+Sistem Ride-Hailing yang dirancang merupakan layanan transportasi berbasis aplikasi online, bertujuan untuk membuat suatu siklus layanan transportasi digital dalam satu alur yang saling berkaitan. 
 
-1. Fork and clone this repository to your local computer.
-2. Open the project using VS Code.
-3. Install the recommended VS Code extensions: `ESLint` and `Prettier`.
-4. Copy and rename `.env.example` to `.env`. Open `.env` and change the database connection string.
-5. Run `npm install` to install the project dependencies.
-6. Run `npm run dev` to start the dev server.
-7. Test the endpoints in the API client app.
+Alur kerja sistem dimulai dari manajemen identitas melalui User & Driver Management, di mana setiap akun yang terverifikasi secara otomatis terhubung dengan Wallet System untuk memfasilitasi transaksi non-tunai, baik berupa top-up maupun pembayaran perjalanan.
 
-## Add New API Endpoints
+Pada fase operasional, sistem menerapkan perhitungan rute, jarak, dan biaya (estimasi) yang hanya dapat diakses secara dinamis oleh pengguna selama proses booking berlangsung. Hal ini memastikan bahwa data biaya yang disajikan selalu akurat dan relevan dengan kondisi perjalanan terkini, termasuk saat dikombinasikan dengan potongan harga dari Promo Management.
 
-1. Create a new database schema in `./src/models`.
-2. Create a new folder in `./src/api/components` (if needed). Remember to separate your codes to repositories, services, controllers, and routes.
-3. Add the new route in `./src/api/routes.js`.
-4. Test your new endpoints in the API client app.
+Selama perjalanan aktif, koordinasi antara penumpang dan pengemudi diperkuat melalui fitur In-App Chat. Setelah status pemesanan mencapai tahap penyelesaian, sistem secara otomatis mengeksekusi penyelesaian pembayaran melalui wallet dan membuka akses untuk user dapat melakukan Review & Rating sebagai indikator kualitas perjalanan, serta terdapat Help Center untuk penanganan kendala atau laporan dari pengguna.
+
+Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivitas penting yang terjadi di seluruh modul kepada pengguna secara real-time.
+
+## 1. Endpoint untuk Membuat Booking Baru
+-> membuat pesanan baru dengan menentukan lokasi jemput, lokasi tujuan, dan kode promo
+
+1. Endpoint: POST /api/bookings
+2. URL: localhost:5000/api/bookings
+3. Parameter: userId, pickupLocation, destinationLocation, promoCode
+4. Input: Request Body (dibagian raw)
+```
+{
+  "userId": "string (ID User)",
+  "pickupLocation": "string (alamat penjemputan)",
+  "destinationLocation": "string (alamat tujuan)",
+  "promoCode": "string (opsional)"
+}
+```
+## 2. Endpoint untuk Mendapatkan Pesanan yang Aktif (Booking Actives)
+-> mengambil data booking yang sedang berlangsung (status: confirmed, on_way)
+
+1. Endpoint: GET /api/bookings/actives
+2. URL: localhost:5000/api/bookings/actives
+3. Parameter: userId
+4. Input: Query Parameter (di tab Params)
+
+## 3. Endpoint untuk Mendapatkan Riwayat Pesanan (Booking History)
+-> mengambil seluruh daftar transaksi perjalanan yang pernah dilakukan oleh user (status: completed)
+
+1. Endpoint: GET /api/bookings/history
+2. URL: localhost:5000/api/bookings/history
+3. Parameter: userId
+4. Input: Query Parameter (di tab Params)
+
+## 4. Endpoint untuk Memperbarui Data Pesanan
+-> mengubah status pesanan atau menempatkan driver ke pesanan tertentu
+
+1. Endpoint: PUT /api/bookings/:id
+2. URL: localhost:5000/api/bookings/:id
+3. Parameter: id, status, driverId
+4. Input: URL Parameter & Request Body (dibagian raw)
+```
+{
+  "status": "string (pending/confirmed/on_way/completed/cancelled)",
+  "driverId": "string (ID driver yang mengambil orderan)"
+}
+```
+## 5. Endpoint untuk Menghapus Data Pesanan
+-> mengambil seluruh daftar transaksi perjalanan yang pernah dilakukan oleh user (status: completed)
+
+1. Endpoint: DELETE /api/bookings/:id
+2. URL: localhost:5000/api/bookings/:id
+3. Parameter: id
+4. Input: URL Parameter
+
+## 6. Endpoint untuk Mengambil Notifikasi User
+-> menampilkan seluruh daftar pesan notifikasi yang masuk ke akun user
+
+1. Endpoint: GET /api/notifications
+2. URL: localhost:5000/api/notifications
+3. Parameter: userId
+4. Input: Query Parameter (di tab Params)
+
+## 7. Endpoint untuk Mengirim Notifikasi Baru
+-> membuat pesanan baru dengan menentukan lokasi jemput, lokasi tujuan, dan kode promo
+
+1. Endpoint: POST /api/notifications
+2. URL: localhost:5000/api/notifications
+3. Parameter: userId, title, message, type
+4. Input: Request Body (dibagian raw)
+```
+{
+  "userId": "string (ID penerima notif)",
+  "title": "string (judul notifikasi)",
+  "message": "string (isi pesan)",
+  "type": "string (system/promo/payment/booking_info)"
+}
+```
+## 8. Endpoint untuk Menghapus Riwayat Notifikasi
+-> membersihkan seluruh daftar notifikasi yang dimiliki oleh user
+
+1. Endpoint: DELETE /api/notifications/clear
+2. URL: localhost:5000/api/notifications/clear
+3. Parameter: userId
+4. Input: Query Parameter (di tab Params)
 
 ## 1. Membuat Tiket
 
