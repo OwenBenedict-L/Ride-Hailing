@@ -10,9 +10,94 @@ Selama perjalanan aktif, koordinasi antara penumpang dan pengemudi diperkuat mel
 
 Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivitas penting yang terjadi di seluruh modul kepada pengguna secara real-time.
 
-# BOOKING
+# ENDPOINTS
 
-## 1. Endpoint untuk Membuat Booking Baru
+---
+
+## REVIEWS (William Richie 535250075)
+
+### Create Review (Membuat Review)
+
+Membuat review perjalanan berdasarkan rideId (sama dengan bookingId)
+
+1. Endpoint: POST /api/reviews
+2. URL: localhost:5000/api/reviews
+3. Parameter: rideId, rating, comment, userId
+4. Input: Request Body (dibagian raw)
+
+```
+{
+    "rideId": "(rideId)",
+    "rating": (rating 1 - 5),
+    "comment": "(Komentar dari user)",
+    "userId": "(userId)"
+}
+```
+
+### Edit Review (Mengubah Review)
+
+Mengubah review yang telah dibuat
+
+1. Endpoint: PUT /api/reviews
+2. URL: localhost:5000/api/reviews
+3. Parameter: rideId, rating, comment, userId
+4. Input: Request Body (dibagian raw)
+
+```
+{
+    "rideId": "(rideId)",
+    "rating": (rating baru 1 - 5),
+    "comment": "(Komentar baru dari user)",
+    "userId": "(userId)"
+}
+```
+
+### Check Review (Melihat Review)
+
+Melihat review yang telah dibuat user pada sebuah perjalanan
+
+1. Endpoint: GET /api/reviews/:ride_id (Ganti :ride_id dengan rideId)
+2. URL: localhost:5000/api/reviews/:ride_id (Ganti :ride_id dengan rideId)
+
+## WALLETS (William Richie 535250075)
+
+### Top-Up (Isi Saldo)
+
+Mengisi saldo ke wallet user
+
+1. Endpoint: POST /api/wallets
+2. URL: localhost:5000/api/wallets
+3. Parameter: userId, amount
+4. Input: Request Body (dibagian raw)
+
+```
+{
+  "userId": "(userId)",
+  "amount": (nominal)
+}
+```
+
+### Check Balance (Cek Saldo)
+
+Melihat saldo wallet user
+
+1. Endpoint: GET /api/wallets/balance/:id (Ganti :id dengan userId)
+2. URL: localhost:5000/api/wallets/balance/:id (Ganti :id dengan userId)
+
+### Check History (Cek Riwayat)
+
+Melihat riwayat transaksi wallet user
+
+1. Endpoint: GET /api/wallets/history/:id (Ganti :id dengan userId)
+2. URL: localhost:5000/api/wallets/history/:id (Ganti :id dengan userId)
+
+---
+
+--- owen
+
+## BOOKINGS (Sheireen Sadeli 535250083)
+
+### Endpoint untuk Membuat Booking Baru
 
 -> membuat pesanan baru dengan menentukan lokasi jemput, lokasi tujuan, dan kode promo
 
@@ -30,7 +115,7 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 }
 ```
 
-## 2. Endpoint untuk Mendapatkan Pesanan yang Aktif (Booking Actives)
+### Endpoint untuk Mendapatkan Pesanan yang Aktif (Booking Actives)
 
 -> mengambil data booking yang sedang berlangsung (status: confirmed, on_way)
 
@@ -39,7 +124,7 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 3. Parameter: userId
 4. Input: Query Parameter (di tab Params)
 
-## 3. Endpoint untuk Mendapatkan Riwayat Pesanan (Booking History)
+### Endpoint untuk Mendapatkan Riwayat Pesanan (Booking History)
 
 -> mengambil seluruh daftar transaksi perjalanan yang pernah dilakukan oleh user (status: completed)
 
@@ -48,7 +133,7 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 3. Parameter: userId
 4. Input: Query Parameter (di tab Params)
 
-## 4. Endpoint untuk Memperbarui Data Pesanan
+### Endpoint untuk Memperbarui Data Pesanan
 
 -> mengubah status pesanan atau menempatkan driver ke pesanan tertentu
 
@@ -64,7 +149,7 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 }
 ```
 
-## 5. Endpoint untuk Menghapus Data Pesanan
+### Endpoint untuk Menghapus Data Pesanan
 
 -> mengambil seluruh daftar transaksi perjalanan yang pernah dilakukan oleh user (status: completed)
 
@@ -73,9 +158,11 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 3. Parameter: id
 4. Input: URL Parameter
 
-# NOTIFICATION
+---
 
-## 1. Endpoint untuk Mengambil Notifikasi User
+## NOTIFICATIONS (Sheireen Sadeli 535250083)
+
+### Endpoint untuk Mengambil Notifikasi User
 
 -> menampilkan seluruh daftar pesan notifikasi yang masuk ke akun user
 
@@ -84,7 +171,7 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 3. Parameter: userId
 4. Input: Query Parameter (di tab Params)
 
-## 2. Endpoint untuk Mengirim Notifikasi Baru
+### Endpoint untuk Mengirim Notifikasi Baru
 
 -> membuat pesanan baru dengan menentukan lokasi jemput, lokasi tujuan, dan kode promo
 
@@ -102,7 +189,7 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 }
 ```
 
-## 3. Endpoint untuk Menghapus Riwayat Notifikasi
+### Endpoint untuk Menghapus Riwayat Notifikasi
 
 -> membersihkan seluruh daftar notifikasi yang dimiliki oleh user
 
@@ -111,9 +198,9 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 3. Parameter: userId
 4. Input: Query Parameter (di tab Params)
 
-# HELP CENTER
+## HELP CENTER (Darren Sebastian 535250076)
 
-## 1. Endpoint untuk Membuat Tiket Baru
+### Endpoint untuk Membuat Tiket Baru
 
 -> Digunakan untuk melaporkan masalah atau bantuan (seperti barang tertinggal).
 
@@ -131,7 +218,7 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 }
 ```
 
-## 2. Endpoint untuk Mengecek Daftar Tiket User
+### Endpoint untuk Mengecek Daftar Tiket User
 
 -> Mengambil semua tiket yang pernah dibuat oleh user tertentu.
 
@@ -140,7 +227,7 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 3. Parameter: userId
 4. Input: Query Parameter (di params)
 
-## 3. Endpoint untuk Melihat Detail Tiket
+### Endpoint untuk Melihat Detail Tiket
 
 -> Mengambil informasi mendalam dari satu tiket spesifik berdasarkan ID Transaksi.
 
@@ -149,7 +236,7 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 3. Parameter: tickets_id
 4. Input: Path Parameter (rideId)
 
-## 4. Endpoint untuk Menambah Balasan (Reply)
+### Endpoint untuk Menambah Balasan (Reply)
 
 -> Digunakan oleh user atau CS untuk berkomunikasi di dalam tiket yang aktif.
 
@@ -165,7 +252,7 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 }
 ```
 
-## 5. Endpoint untuk Menyelesaikan Tiket
+### Endpoint untuk Menyelesaikan Tiket
 
 -> Mengubah status tiket menjadi selesai atau resolved.
 
@@ -174,9 +261,9 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 3. Parameter: tickets_id
 4. Input: Path Parameter
 
-# ESTIMATION
+## ESTIMATION (Darren Sebastian 535250076)
 
-## 1. Endpoint untuk Membuat Estimasi Baru
+### Endpoint untuk Membuat Estimasi Baru
 
 -> Menghitung tarif perjalanan berdasarkan asal dan tujuan.
 
@@ -193,14 +280,14 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 }
 ```
 
-### 1.1 Post-Response
+#### 1.1 Post-Response
 
 ```
 let responseData = pm.response.json();
 pm.environment.set("harga_estimasi", responseData.fare);
 ```
 
-## 2. Endpoint untuk Update Rute Estimasi
+### Endpoint untuk Update Rute Estimasi
 
 -> Memperbarui data estimasi yang sudah ada.
 
@@ -217,7 +304,7 @@ pm.environment.set("harga_estimasi", responseData.fare);
 }
 ```
 
-## 3. Endpoint untuk Mengambil / Menghapus Estimasi Berdasarkan ID
+### Endpoint untuk Mengambil / Menghapus Estimasi Berdasarkan ID
 
 -> Digunakan untuk melihat detail atau menghapus data estimasi dari database.
 
