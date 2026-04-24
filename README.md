@@ -65,12 +65,12 @@ POST localhost:5001/api/helpcenter/tickets/ride_id/replies
 
 ### Estimation
 
-## Delete & Get
+## 1. Delete & Get
 
 localhost:5001/api/estimations/"DataBase_Id"
 localhost:5001/api/estimations/69e3c37ac4f08e6ddbaa9e67
 
-## Post
+## 2. Post
 
 localhost:5001/api/estimations
 {
@@ -80,13 +80,13 @@ localhost:5001/api/estimations
 "distance": angka
 }
 
-# post-response
+# 2.1 post-response
 
 let responseData = pm.response.json();
 pm.environment.set("harga_estimasi", responseData.fare);
 pm.environment.set("id_estimasi", responseData.\_id);
 
-## Put
+## 3 Put
 
 localhost:5001/api/estimations/url/route
 {
