@@ -4,9 +4,10 @@ const router = express.Router({ mergeParams: true });
 
 module.exports = (app) => {
   app.use('/helpcenter/tickets', router);
-  router.get('/', ticketsController.getTickets);
+  
   router.post('/', ticketsController.createTicket);
-  router.get('/:id', ticketsController.getTicketById);
-  router.post('/:id/replies', ticketsController.addReply); 
+  router.post('/:id/replies', ticketsController.addReply);
+  router.get('/', ticketsController.getTickets);
+  router.get('/:id', ticketsController.getTicketById); 
   router.put('/:id/resolve', ticketsController.resolveTicket);
 };
