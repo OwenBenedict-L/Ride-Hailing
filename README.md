@@ -10,9 +10,11 @@ Selama perjalanan aktif, koordinasi antara penumpang dan pengemudi diperkuat mel
 
 Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivitas penting yang terjadi di seluruh modul kepada pengguna secara real-time.
 
-## 1. Endpoint untuk Membuat Booking Baru
--> membuat pesanan baru dengan menentukan lokasi jemput, lokasi tujuan, dan kode promo
+---
 
+## BOOKINGS (Sheireen Sadeli 535250083)
+### Endpoint untuk Membuat Booking Baru
+-> membuat pesanan baru dengan menentukan lokasi jemput, lokasi tujuan, dan kode promo
 1. Endpoint: POST /api/bookings
 2. URL: localhost:5000/api/bookings
 3. Parameter: userId, pickupLocation, destinationLocation, promoCode
@@ -25,25 +27,23 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
   "promoCode": "string (opsional)"
 }
 ```
-## 2. Endpoint untuk Mendapatkan Pesanan yang Aktif (Booking Actives)
--> mengambil data booking yang sedang berlangsung (status: confirmed, on_way)
 
+### Endpoint untuk Mendapatkan Pesanan yang Aktif (Booking Actives)
+-> mengambil data booking yang sedang berlangsung (status: confirmed, on_way)
 1. Endpoint: GET /api/bookings/actives
 2. URL: localhost:5000/api/bookings/actives
 3. Parameter: userId
 4. Input: Query Parameter (di tab Params)
 
-## 3. Endpoint untuk Mendapatkan Riwayat Pesanan (Booking History)
+### Endpoint untuk Mendapatkan Riwayat Pesanan (Booking History)
 -> mengambil seluruh daftar transaksi perjalanan yang pernah dilakukan oleh user (status: completed)
-
 1. Endpoint: GET /api/bookings/history
 2. URL: localhost:5000/api/bookings/history
 3. Parameter: userId
 4. Input: Query Parameter (di tab Params)
 
-## 4. Endpoint untuk Memperbarui Data Pesanan
+### Endpoint untuk Memperbarui Data Pesanan
 -> mengubah status pesanan atau menempatkan driver ke pesanan tertentu
-
 1. Endpoint: PUT /api/bookings/:id
 2. URL: localhost:5000/api/bookings/:id
 3. Parameter: id, status, driverId
@@ -54,7 +54,8 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
   "driverId": "string (ID driver yang mengambil orderan)"
 }
 ```
-## 5. Endpoint untuk Menghapus Data Pesanan
+
+### Endpoint untuk Menghapus Data Pesanan
 -> mengambil seluruh daftar transaksi perjalanan yang pernah dilakukan oleh user (status: completed)
 
 1. Endpoint: DELETE /api/bookings/:id
@@ -62,17 +63,18 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
 3. Parameter: id
 4. Input: URL Parameter
 
-## 6. Endpoint untuk Mengambil Notifikasi User
--> menampilkan seluruh daftar pesan notifikasi yang masuk ke akun user
+---
 
+## NOTIFICATIONS (Sheireen Sadeli 535250083)
+### Endpoint untuk Mengambil Notifikasi User
+-> menampilkan seluruh daftar pesan notifikasi yang masuk ke akun user
 1. Endpoint: GET /api/notifications
 2. URL: localhost:5000/api/notifications
 3. Parameter: userId
 4. Input: Query Parameter (di tab Params)
 
-## 7. Endpoint untuk Mengirim Notifikasi Baru
+### Endpoint untuk Mengirim Notifikasi Baru
 -> membuat pesanan baru dengan menentukan lokasi jemput, lokasi tujuan, dan kode promo
-
 1. Endpoint: POST /api/notifications
 2. URL: localhost:5000/api/notifications
 3. Parameter: userId, title, message, type
@@ -85,9 +87,9 @@ Layanan notifikasi secara aktif akan memantau dan menginformasikan setiap aktivi
   "type": "string (system/promo/payment/booking_info)"
 }
 ```
-## 8. Endpoint untuk Menghapus Riwayat Notifikasi
--> membersihkan seluruh daftar notifikasi yang dimiliki oleh user
 
+### Endpoint untuk Menghapus Riwayat Notifikasi
+-> membersihkan seluruh daftar notifikasi yang dimiliki oleh user
 1. Endpoint: DELETE /api/notifications/clear
 2. URL: localhost:5000/api/notifications/clear
 3. Parameter: userId
@@ -210,3 +212,69 @@ localhost:5001/api/auth/login
     "password": "12345678"
 
 }
+
+---
+
+## WALLETS (William Richie 535250075)
+### Top-Up (Isi Saldo)
+Mengisi saldo ke wallet user
+1. Endpoint: POST /api/wallets
+2. URL: localhost:5000/api/wallets
+3. Parameter: userId, amount
+4. Input: Request Body (dibagian raw)
+```
+{
+  "userId": "(userId)",
+  "amount": (nominal)
+}
+```
+
+### Check Balance (Cek Saldo)
+Melihat saldo wallet user
+1. Endpoint: GET /api/wallets/balance/:id (Ganti :id dengan userId)
+2. URL: localhost:5000/api/wallets/balance/:id (Ganti :id dengan userId)
+
+### Check History (Cek Riwayat)
+Melihat riwayat transaksi wallet user
+1. Endpoint: GET /api/wallets/history/:id (Ganti :id dengan userId)
+2. URL: localhost:5000/api/wallets/history/:id (Ganti :id dengan userId)
+
+---
+
+## REVIEWS (William Richie 535250075)
+### Create Review (Membuat Review)
+Membuat review perjalanan berdasarkan rideId (sama dengan bookingId)
+1. Endpoint: POST /api/reviews
+2. URL: localhost:5000/api/reviews
+3. Parameter: rideId, rating, comment, userId
+4. Input: Request Body (dibagian raw)
+```
+{
+    "rideId": "(rideId)",
+    "rating": (rating 1 - 5),
+    "comment": "(Komentar dari user)",
+    "userId": "(userId)"
+}
+```
+
+### Edit Review (Mengubah Review)
+Mengubah review yang telah dibuat
+1. Endpoint: PUT /api/reviews
+2. URL: localhost:5000/api/reviews
+3. Parameter: rideId, rating, comment, userId
+4. Input: Request Body (dibagian raw)
+```
+{
+    "rideId": "(rideId)",
+    "rating": (rating baru 1 - 5),
+    "comment": "(Komentar baru dari user)",
+    "userId": "(userId)"
+}
+```
+
+### Check Review (Melihat Review)
+Melihat review yang telah dibuat user pada sebuah perjalanan
+1. Endpoint: GET /api/reviews/:ride_id (Ganti :ride_id dengan rideId)
+2. URL: localhost:5000/api/reviews/:ride_id (Ganti :ride_id dengan rideId)
+
+---
