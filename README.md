@@ -17,11 +17,17 @@
 3. Add the new route in `./src/api/routes.js`.
 4. Test your new endpoints in the API client app.
 
+---
+
+---
+
+### HELP CENTER
+
 ## 1. Membuat Tiket
 
 POST localhost:5001/api/helpcenter/tickets
 {
-"transactionId":"rideId", -> dari sheireen
+"transactionId":"rideId",
 "userId": "user111",
 "subject": "Barang Tertinggal",
 "description": "Dompet saya tertinggal di kereta"
@@ -29,15 +35,15 @@ POST localhost:5001/api/helpcenter/tickets
 
 ## 2. Mengecek Tiket
 
-Get localhost:5001/api/helpcenter/tickets?userId= ... -> masukkan userId
+Get localhost:5001/api/helpcenter/tickets?userId=
 
 ## 3. Melihat Detail Tiket
 
-GET localhost:5001/api/helpcenter/tickets/rideId -> dari sheireen
+GET localhost:5001/api/helpcenter/tickets/rideId
 
 ## 4. Menambah Balasan ke Tiket Aktif
 
-POST localhost:5001/api/helpcenter/tickets/ride_id/replies -> dari sheireen
+POST localhost:5001/api/helpcenter/tickets/ride_id/replies
 
 {
 "sender": "user",
@@ -53,15 +59,19 @@ POST localhost:5001/api/helpcenter/tickets/ride_id/replies -> dari sheireen
 
 ## 5. Menutup/Menyelesaikan Tiket
 
-PUT localhost:5001/api/helpcenter/tickets/ride_id/resolve -> dari sheireen
+## PUT localhost:5001/api/helpcenter/tickets/ride_id/resolve -> dari sheireen
 
-note: butuh rideId dari sheiren
+---
 
-Delete & Get
+### Estimation
+
+## Delete & Get
+
 localhost:5001/api/estimations/"DataBase_Id"
 localhost:5001/api/estimations/69e3c37ac4f08e6ddbaa9e67
 
-Post
+## Post
+
 localhost:5001/api/estimations
 {
 "userId": "nama",
@@ -70,7 +80,14 @@ localhost:5001/api/estimations
 "distance": angka
 }
 
-Put
+# post-response
+
+let responseData = pm.response.json();
+pm.environment.set("harga_estimasi", responseData.fare);
+pm.environment.set("id_estimasi", responseData.\_id);
+
+## Put
+
 localhost:5001/api/estimations/url/route
 {
 "userId": "nama",
@@ -81,9 +98,13 @@ localhost:5001/api/estimations/url/route
 
 let responseData = pm.response.json();
 pm.environment.set("harga_estimasi", responseData.fare);
-pm.environment.set("id_estimasi", responseData._id);
+pm.environment.set("id_estimasi", responseData.\_id);
 
-### Validate Promo
+---
+
+---
+
+## Validate Promo
 
 localhost:5001/api/promos/validate
 {
@@ -104,7 +125,7 @@ localhost:5001/api/promos
 "expiry_date": "2026-12-31T23:59:59.000Z"
 }
 
-### LOGIN DARREN
+### AUTH DARREN
 
 localhost:5001/api/auth/login
 {

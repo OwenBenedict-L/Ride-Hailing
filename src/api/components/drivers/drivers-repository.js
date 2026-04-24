@@ -9,7 +9,7 @@ async function getDriver(id) {
 }
 
 async function createDriver(email, password, fullName) {
-  return Drivers.create({ email, password, fullName });
+  return Drivers.create({ email, password, fullNameDrivers: fullName });
 }
 
 async function getDriverByEmail(email) {
@@ -20,7 +20,7 @@ async function updateDriver(id, email, fullNameDrivers) {
   return Drivers.updateOne({ _id: id }, { $set: { email, fullNameDrivers } });
 }
 
-async function changeDriverPassword(id, password) {
+async function changePasswordDriver(id, password) {
   return Drivers.updateOne(
     { _id: id },
     { $set: { password } }
@@ -50,7 +50,7 @@ module.exports = {
   createDriver,
   getDriverByEmail,
   updateDriver,
-  changeDriverPassword,
+  changePasswordDriver,
   updateStatus,
   deleteDriver,
 };

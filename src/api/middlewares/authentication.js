@@ -1,7 +1,6 @@
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
-
-const { Users } = require('../../models');
+const { Users, Drivers } = require('../../models');
 
 passport.use(
   'user',
@@ -12,16 +11,26 @@ passport.use(
     },
     async (payload, done) => {
       const user = await Users.findOne({ email: payload.email });
-
-      // User not found
-      if (!user) {
-        return done(null, false);
-      }
-
-      // User found
-      return done(null, user);
+      return user ? done(null, user) : done(null, false);
     }
   )
 );
 
-module.exports = passport.authenticate('user', { session: false });
+passport.use(
+  'driver',
+  new passportJWT.Strategy(
+    {
+      jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderWithScheme('jwt'),
+      secretOrKey: 'RANDOM_STRING',
+    },
+    async (payload, done) => {
+      const driver = await Drivers.findOne({ email: payload.email });
+      return driver ? done(null, driver) : done(null, false);
+    }
+  )
+);
+
+module.exports = {
+  authMiddleware: passport.authenticate('user', { session: false }),
+  authMidDriver: passport.authenticate('driver', { session: false }),
+};
